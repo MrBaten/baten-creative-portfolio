@@ -1,0 +1,28 @@
+# Gitignore for baten-creative-portfolio
+# macOS system files
+.DS_Store
+**/.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Node
+node_modules/
+dist/
+.cache/
+
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.*.local
+*.env
+
+# Build logs
+npm-debug.log*
+*.log
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo

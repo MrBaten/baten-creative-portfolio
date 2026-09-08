@@ -1,0 +1,690 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Handjet:ELGR,ELSH,wght@1..2,0..16,100..900&family=Inter:wght@300;400;500;600;700&family=Just+Me+Again+Down+Here&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+  /* ==========================================================================
+     1. COLOR SYSTEM (Tailored Editorial Palette)
+     ========================================================================== */
+  --ca-surface: #fdfdfb;
+  --ca-ink: #191510;
+  --ca-gray: #7a7263;
+  --ca-chrome: #ebe4d3;
+  --ca-tick: #c4b9a3;
+  
+  /* Brand Accent Colors */
+  --ca-blue: #2b57d6;
+  --ca-blue-hover: #2246b0;
+  --ca-cyan: #b7c6ef;
+  --ca-yellow: #f7c948;
+  --ca-yellow-soft: #f4e5b2;
+  --ca-magenta: #ff4d8d;
+  --ca-pink-soft: #ffc6da;
+  --ca-green: #16b06a;
+  --ca-mint: #a9dfc6;
+  --ca-orange: #ff6a35;
+  --ca-brown: #5c3a2e;
+
+  /* ==========================================================================
+     2. RULED NOTEBOOK PAPER TOKENS
+     ========================================================================== */
+  --paper-rule-gap: 40px;
+  --paper-line-color: rgba(25, 21, 16, 0.09);
+  --paper-accent-line: rgba(255, 77, 141, 0.15);
+
+  /* ==========================================================================
+     3. SYSTEMATIC SPACING TOKENS (4px / 8px Increments)
+     ========================================================================== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 64px;
+  --space-10: 80px;
+  --space-11: 96px;
+  --space-12: 120px;
+
+  /* ==========================================================================
+     4. TYPOGRAPHY TOKENS
+     ========================================================================== */
+  --font-display: 'Handjet', 'Archivo Black', 'Syne', Impact, sans-serif;
+  --font-hand: 'Just Me Again Down Here', 'Bradley Hand', cursive;
+  --font-mono: 'DM Mono', 'Space Mono', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-grotesk: 'Bricolage Grotesque', 'Space Grotesk', sans-serif;
+
+  /* ==========================================================================
+     5. Z-INDEX LAYERS (Disciplined Depth Hierarchy)
+     ========================================================================== */
+  --z-bg: 0;
+  --z-paper-ruling: 1;
+  --z-grain: 2;
+  --z-content: 10;
+  --z-decoration: 20;
+  --z-floating: 30;
+  --z-header: 50;
+  --z-drawer: 60;
+  --z-modal: 90;
+  --z-splash: 100;
+
+  /* ==========================================================================
+     6. CONTAINER & MOTION TOKENS
+     ========================================================================== */
+  --container-max: 1360px;
+  --ease-artsy: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Base Reset & Typography Setup */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--ca-surface);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--paper-rule-gap) - 1px),
+    var(--paper-line-color) calc(var(--paper-rule-gap) - 1px),
+    var(--paper-line-color) var(--paper-rule-gap)
+  );
+  background-attachment: local;
+  color: var(--ca-ink);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: 1.6;
+  touch-action: manipulation;
+}
+
+/* ==========================================================================
+   SHARED LAYOUT CONTAINER
+   ========================================================================== */
+.ca-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .ca-container {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ca-container {
+    padding-left: var(--space-8);
+    padding-right: var(--space-8);
+  }
+}
+
+@media (min-width: 1280px) {
+  .ca-container {
+    padding-left: var(--space-9);
+    padding-right: var(--space-9);
+  }
+}
+
+/* Section Rhythm Class */
+.ca-section {
+  padding-top: var(--space-9);
+  padding-bottom: var(--space-9);
+  position: relative;
+  overflow-x: clip;
+}
+
+@media (min-width: 640px) {
+  .ca-section {
+    padding-top: var(--space-10);
+    padding-bottom: var(--space-10);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ca-section {
+    padding-top: var(--space-11);
+    padding-bottom: var(--space-11);
+  }
+}
+
+/* ==========================================================================
+   TYPOGRAPHY SYSTEM
+   ========================================================================== */
+.ca-display {
+  font-family: 'Handjet', Impact, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+}
+
+.ca-signature-baten {
+  font-family: 'Handjet', Impact, sans-serif;
+  font-weight: 800;
+  font-variation-settings: 'ELGR' 2, 'ELSH' 2, 'wght' 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  display: inline-block;
+}
+
+.ca-hand {
+  font-family: var(--font-hand);
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+}
+
+.ca-mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.15em;
+}
+
+/* Strict 2-Line Fluid Headline */
+.hero-headline-line {
+  white-space: nowrap !important;
+  font-size: clamp(1.25rem, 3.8vw, 3.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* ==========================================================================
+   BUTTON & INTERACTION COMPONENTS
+   ========================================================================== */
+/* Focus-Visible System for Universal Accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--ca-ink);
+  outline-offset: 3px;
+}
+
+/* Primary Button Component */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  background-color: var(--ca-ink);
+  color: #ffffff;
+  border: 2px solid var(--ca-ink);
+  padding: 0 var(--space-6) 0 var(--space-3);
+  height: 48px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: all 0.2s var(--ease-artsy);
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 2px 3px 0 var(--ca-ink);
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--ca-ink);
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0 var(--ca-ink);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 1px 1px 0 var(--ca-ink);
+}
+
+.btn-primary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: var(--ca-blue);
+  color: var(--ca-ink);
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover .btn-primary-icon {
+  background-color: var(--ca-magenta);
+  color: #ffffff;
+}
+
+/* Icon Round Button Component */
+.btn-icon-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  color: var(--ca-ink);
+  box-shadow: 1.5px 1.5px 0 rgba(25, 21, 16, 0.25);
+  transition: transform 0.2s var(--ease-artsy), box-shadow 0.2s var(--ease-artsy);
+  text-decoration: none;
+}
+
+.btn-icon-circle:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 3.5px 0 rgba(25, 21, 16, 0.35);
+}
+
+.btn-icon-circle:active {
+  transform: translateY(0);
+  box-shadow: 1px 1px 0 rgba(25, 21, 16, 0.25);
+}
+
+/* Nav Item Component */
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-5);
+  height: 48px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ca-ink);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-item svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.nav-item:hover {
+  background-color: var(--ca-chrome);
+}
+
+.nav-item.is-active {
+  background-color: var(--ca-yellow);
+}
+
+/* ==========================================================================
+   DECORATIVE STICKERS, TAPES & DOODLES
+   ========================================================================== */
+.ca-doodle-box {
+  border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+}
+
+.ca-tape-strip {
+  position: absolute;
+  opacity: 0.88;
+  clip-path: polygon(2% 10%, 40% 4%, 98% 8%, 96% 30%, 100% 50%, 96% 70%, 99% 92%, 60% 96%, 8% 93%, 4% 71%, 0% 50%, 4% 30%);
+  filter: drop-shadow(0 1.5px 2px rgba(25, 21, 16, 0.25));
+  z-index: 10;
+  pointer-events: none;
+}
+
+.ca-tape-strip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, rgba(255,255,255,0.48) 0%, transparent 34%, rgba(255,255,255,0.22) 60%, transparent 86%);
+}
+
+.ca-tape {
+  position: relative;
+}
+
+.ca-tape::after {
+  content: "";
+  border-top: 0 solid transparent;
+  border-bottom: 15px solid rgba(25, 21, 16, 0.22);
+  border-left: 15px solid transparent;
+  border-right: 0 solid transparent;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.ca-stamp-edge {
+  clip-path: polygon(2% 6%, 12% 0%, 25% 4%, 40% 1%, 55% 5%, 70% 0%, 85% 4%, 98% 1%, 96% 15%, 100% 30%, 97% 45%, 100% 60%, 96% 75%, 99% 90%, 97% 98%, 85% 96%, 70% 100%, 55% 96%, 40% 100%, 25% 95%, 12% 100%, 3% 97%, 1% 85%, 4% 70%, 0% 55%, 3% 40%, 0% 25%, 2% 12%);
+  transition: transform 0.2s var(--ease-artsy);
+}
+
+.ca-stamp-edge:hover {
+  transform: translateY(-2px);
+}
+
+.ca-stamp-square {
+  clip-path: polygon(3% 3%, 16% 1%, 28% 5%, 44% 0%, 58% 4%, 72% 1%, 84% 5%, 97% 2%, 100% 18%, 96% 32%, 100% 48%, 97% 64%, 100% 80%, 96% 94%, 98% 99%, 84% 95%, 68% 100%, 52% 96%, 38% 100%, 22% 95%, 8% 99%, 1% 92%, 4% 78%, 0% 62%, 3% 48%, 0% 34%, 4% 20%, 1% 8%);
+}
+
+.ca-tag-cut {
+  clip-path: polygon(0 28%, 12% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* File Folder Tab Slopes */
+.tab-left {
+  clip-path: polygon(0 0, calc(100% - 44px) 0, 100% 100%, 0 100%);
+}
+
+@media (min-width: 640px) {
+  .tab-left {
+    clip-path: polygon(0 0, calc(100% - 76px) 0, 100% 100%, 0 100%);
+  }
+}
+
+.tab-mid {
+  clip-path: polygon(44px 0, calc(100% - 44px) 0, 100% 100%, 0 100%);
+}
+
+@media (min-width: 640px) {
+  .tab-mid {
+    clip-path: polygon(76px 0, calc(100% - 76px) 0, 100% 100%, 0 100%);
+  }
+}
+
+/* Film Grain Texture */
+.ca-grain {
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='cn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cn)'/%3E%3C/svg%3E");
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* ==========================================================================
+   FOLDER STACKING TAB OFFSET MANAGEMENT
+   ========================================================================== */
+.folder-tab-1 { margin-left: 0; }
+.folder-tab-2 { margin-left: 0; }
+.folder-tab-3 { margin-left: 0; }
+.folder-tab-4 { margin-left: 0; }
+
+@media (min-width: 640px) {
+  .folder-tab-2 { margin-left: max(0px, min(18%, calc(100% - 240px))); }
+  .folder-tab-3 { margin-left: max(0px, min(36%, calc(100% - 240px))); }
+  .folder-tab-4 { margin-left: max(0px, min(54%, calc(100% - 240px))); }
+}
+
+@media (min-width: 1024px) {
+  .folder-tab-2 { margin-left: min(21%, calc(100% - 320px)); }
+  .folder-tab-3 { margin-left: min(42%, calc(100% - 320px)); }
+  .folder-tab-4 { margin-left: min(63%, calc(100% - 320px)); }
+}
+
+/* ==========================================================================
+   MICRO-ANIMATIONS & KEYFRAMES
+   ========================================================================== */
+@keyframes ca-blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.12); }
+}
+
+.ca-blink {
+  transform-origin: 50%;
+  animation: 4.4s ease-in-out infinite ca-blink;
+}
+
+@keyframes ca-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ca-spin-slow {
+  animation: 9s linear infinite ca-spin;
+  transform-origin: center;
+}
+
+@keyframes photo-float-left {
+  0%, 100% {
+    transform: translateY(0) rotate(-6deg) scale(1);
+  }
+  50% {
+    transform: translateY(-14px) rotate(-1deg) scale(1.05);
+  }
+}
+
+@keyframes photo-float-right {
+  0%, 100% {
+    transform: translateY(0) rotate(6deg) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) rotate(11deg) scale(1.05);
+  }
+}
+
+.ca-photo-float-left {
+  animation: photo-float-left 5s ease-in-out infinite;
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ca-photo-float-left:hover {
+  animation-play-state: paused;
+  transform: translateY(-6px) rotate(-12deg) scale(1.15) !important;
+}
+
+.ca-photo-float-right {
+  animation: photo-float-right 5.8s ease-in-out infinite 0.6s;
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ca-photo-float-right:hover {
+  animation-play-state: paused;
+  transform: translateY(-6px) rotate(12deg) scale(1.15) !important;
+}
+
+/* Inverted Viewfinder Lens (Square camera focus box matching demo screenshot) */
+.viewfinder-lens {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 0 !important;
+  border: 2.5px solid var(--ca-ink);
+  background-color: transparent;
+  backdrop-filter: invert(1);
+  -webkit-backdrop-filter: invert(1);
+  transform: translate(-50%, -50%) scale(0.4);
+  opacity: 0;
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease-out;
+  will-change: transform, left, top, opacity;
+  z-index: 30;
+}
+
+/* ============================================================
+   SPLASH — bottom-to-top letter reveal
+   ============================================================ */
+
+/* Wrapper for each character in splash bubbles */
+.splash-char-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.1;
+  padding-bottom: 2px;
+}
+
+/* Individual letter slides up from below */
+@keyframes char-rise {
+  0% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+.splash-char {
+  display: inline-block;
+  animation: char-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Whole bubble entrance */
+@keyframes bubble-enter {
+  0% {
+    transform: scale(0.92) translateY(18px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.splash-bubble-enter {
+  animation: bubble-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Whole bubble exit (fade + slide up) */
+@keyframes bubble-exit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+
+.splash-bubble-exit {
+  animation: bubble-exit 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* ============================================================
+   BATEN — per-letter bottom-to-top reveal after splash
+   ============================================================ */
+.baten-char-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 0.95;
+  padding-bottom: 4px;
+}
+
+@keyframes baten-rise {
+  0% {
+    transform: translateY(115%);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+.baten-char {
+  display: inline-block;
+  animation: baten-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ============================================================
+   CORNER STICKERS — full box slides up from below
+   ============================================================ */
+@keyframes sticker-box-rise {
+  0% {
+    transform: translateY(45px) rotate(var(--sticker-rot, 0deg));
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) rotate(var(--sticker-rot, 0deg));
+    opacity: 1;
+  }
+}
+
+.sticker-slide-up {
+  opacity: 0;
+  transform: translateY(45px) rotate(var(--sticker-rot, 0deg));
+  animation: sticker-box-rise 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-play-state: paused;
+}
+
+/* Desktop sticker angles */
+.sticker-bl { --sticker-rot: -6deg; }
+.sticker-br { --sticker-rot: 4deg; }
+
+/* Mobile sticker angles */
+.sticker-mob-l { --sticker-rot: -5.4deg; }
+.sticker-mob-r { --sticker-rot: 3.6deg; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ca-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ca-chrome);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ca-tick);
+}
+
+/* ==========================================================================
+   7. ACCESSIBILITY & PREFERS-REDUCED-MOTION
+   ========================================================================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.focus\:not-sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .ca-photo-float-left,
+  .ca-photo-float-right,
+  .ca-spin-slow,
+  .ca-blink {
+    animation: none !important;
+  }
+}

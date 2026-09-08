@@ -1,0 +1,7 @@
+# Force HTTPS + canonical domain redirects
+http://optiobyte.com/* https://optiobyte.com/:splat 301!
+http://www.optiobyte.com/* https://optiobyte.com/:splat 301!
+https://www.optiobyte.com/* https://optiobyte.com/:splat 301!
+
+# SPA / Static 404 fallback
+/* /404.html 404

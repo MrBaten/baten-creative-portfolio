@@ -1,0 +1,12 @@
+# robots.txt for https://optiobyte.com/
+User-agent: *
+Allow: /
+
+# Disallow private preview or test query parameters
+Disallow: /api/
+Disallow: /*?*preview=*
+Disallow: /*?*draft=*
+
+# Host & XML Sitemap Reference
+Host: https://optiobyte.com
+Sitemap: https://optiobyte.com/sitemap.xml

@@ -1,0 +1,66 @@
+# ==============================================================================
+# Hostinger Web Server Configuration (.htaccess) for optiobyte.com
+# Hardened for Security, Performance, Canonical Redirects & SEO
+# ==============================================================================
+
+RewriteEngine On
+
+# 1. Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 2. Canonical Domain: redirect www.optiobyte.com to optiobyte.com
+RewriteCond %{HTTP_HOST} ^www\.optiobyte\.com$ [NC]
+RewriteRule ^(.*)$ https://optiobyte.com/$1 [L,R=301]
+
+# 3. Custom 404 Error Page
+ErrorDocument 404 /404.html
+
+# 4. Block Sensitive Files and Hidden Directories
+<FilesMatch "(^\.env|^\.git|^\.DS_Store|package\.json|package-lock\.json|\.log$)">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# 5. Production HTTP Security Headers
+<IfModule mod_headers.c>
+  # Prevent MIME type sniffing
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Clickjacking defense
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Cross-Origin referrer control
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Permissions policy (disable unused hardware features)
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+
+  # HSTS (Strict-Transport-Security) for 1 year with preload
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # Content-Security-Policy tailored for optiobyte.com
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://i.ytimg.com https://images.unsplash.com https://optiobyte.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://formsubmit.co; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co; upgrade-insecure-requests"
+</IfModule>
+
+# 6. Enable Gzip / Deflate Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# 7. Browser Caching for Performance (Core Web Vitals)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 2 days"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
