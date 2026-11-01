@@ -108,6 +108,7 @@ const particleVertex = /* glsl */ `
   uniform float uSize;
   uniform float uJitter;
   uniform float uPixelRatio;
+  uniform float uMaxSize;
   varying vec3 vColor;
   varying float vAlpha;
   void main() {
@@ -136,7 +137,11 @@ const particleVertex = /* glsl */ `
     vColor = mix(aColFrom, aColTo, t);
     vAlpha = (1.0 - smoothstep(0.55, 1.0, uScatter)) * (0.78 + 0.22 * sin(uTime * 2.3 + aSeed * 40.0));
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
-    gl_PointSize = uSize * uPixelRatio * (9.0 / -mv.z) * (1.0 + (aSeed - 0.5) * uJitter);
+    float dist = -mv.z;
+    // Cap the size and fade particles right in front of the lens: when the camera flies
+    // through the field, uncapped points grow to 100+ px and the overdraw stalls the GPU.
+    gl_PointSize = min(uSize * uPixelRatio * (9.0 / max(dist, 0.05)) * (1.0 + (aSeed - 0.5) * uJitter), uMaxSize);
+    vAlpha *= smoothstep(0.8, 2.6, dist);
     gl_Position = projectionMatrix * mv;
   }
 `;
@@ -271,7 +276,7 @@ async function buildOpening({ N, word, works, frameH, wordW, reducedMotion }) {
     uniforms: {
       uMorph: { value: 1 }, uTime: { value: 0 }, uNoise: { value: reducedMotion ? 0 : 1 }, uScatter: { value: 0 },
       uMouse: { value: new Vector3(99, 99, 0) }, uMouseK: { value: 0 },
-      uSize: { value: 3.2 }, uJitter: { value: 0.7 }, uPixelRatio: { value: 1 }, uGain: { value: reducedMotion ? 0.5 : 0.9 },
+      uSize: { value: 3.2 }, uJitter: { value: 0.7 }, uPixelRatio: { value: 1 }, uMaxSize: { value: 18 }, uGain: { value: reducedMotion ? 0.5 : 0.9 },
     },
   });
   const points = new Points(geo, mat);
@@ -507,8 +512,10 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
     console.warn('WebGL unavailable', e);
     return null;
   }
-  const maxDpr = small ? 1.5 : 1.75;
-  let dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
+  // Start from a sensible quality tier, then adapt to the real frame rate (see frame()).
+  const lowEnd = (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const maxDpr = small ? 1.25 : 1.5;
+  let dpr = lowEnd ? 1 : Math.min(window.devicePixelRatio || 1, maxDpr);
   renderer.setPixelRatio(dpr);
   renderer.toneMapping = ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -547,7 +554,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
 
   /* Scene 0 — noise to film */
   const ORIGIN = new Vector3(0, 2.7, 0);
-  const N = small ? 14000 : 30000;
+  const N = lowEnd ? 10000 : small ? 14000 : 26000;
   const opening = await buildOpening({ N, word, works, frameH: 5.2, wordW: 4.8, reducedMotion });
   opening.points.position.copy(ORIGIN);
   scene.add(opening.points);
@@ -627,8 +634,9 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   const sphere = new Mesh(new SphereGeometry(0.38, 64, 32), new MeshStandardMaterial({ color: '#ffffff', roughness: 0.04, metalness: 1, envMapIntensity: 3 }));
   sphere.position.set(PRODUCT.x - 0.2, 1.38, PRODUCT.z + 0.08);
   const cube = new Mesh(new BoxGeometry(0.46, 0.46, 0.46), new MeshPhysicalMaterial({
+    // No transmission: real-time glass re-renders the whole scene every frame it's on screen.
     color: ORANGE, emissive: ORANGE, emissiveIntensity: 0.55, roughness: 0.1, metalness: 0,
-    transmission: hq ? 0.6 : 0, thickness: 0.4, ior: 1.45, clearcoat: 1,
+    transparent: true, opacity: 0.88, clearcoat: 1,
   }));
   cube.position.set(PRODUCT.x + 0.3, 1.23, PRODUCT.z - 0.12);
   cube.rotation.set(0.2, 0.6, 0);
@@ -654,13 +662,13 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   scene.add(clap.group);
 
   /* ── Glow (bloom) ──────────────────────────────────────────────── */
-  const rt = new WebGLRenderTarget(1, 1, { type: HalfFloatType, samples: hq ? 4 : 2 });
+  const rt = new WebGLRenderTarget(1, 1, { type: HalfFloatType, samples: hq && !lowEnd ? 2 : 0 });
   const composer = new EffectComposer(renderer, rt);
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(new Vector2(256, 256), small ? 0.75 : 0.95, 0.55, 0.92);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
-  let useBloom = true;
+  let useBloom = !lowEnd;
 
   /* ── Camera path ───────────────────────────────────────────────── */
   const STOPS = [
@@ -721,6 +729,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
     camera.fov = portrait ? 52 : 36;
     camera.updateProjectionMatrix();
     opening.mat.uniforms.uPixelRatio.value = dpr * (h / 900);
+    opening.mat.uniforms.uMaxSize.value = 16 * dpr;
     fitStops();
     refreshLooks();
     dirty = true;
@@ -745,7 +754,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
 
   /* ── Frame loop ────────────────────────────────────────────────── */
   let shown = progress();
-  let last = performance.now(), elapsed = 0, frames = 0, slowFrames = 0, readyFired = false;
+  let last = performance.now(), elapsed = 0, frames = 0, frameSum = 0, lastDrop = -10, halved = false, readyFired = false, paused = false;
   let clapState = 0, clapT = 0;
   const camPos = new Vector3(), camLook = new Vector3(), ahead = new Vector3(), lookA = new Vector3();
 
@@ -770,7 +779,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
     elapsed += dt;
 
     const target = progress();
-    shown = reducedMotion ? Math.round(target) : shown + (target - shown) * (1 - Math.exp(-dt * 4.5));
+    shown = reducedMotion ? Math.round(target) : shown + (target - shown) * (1 - Math.exp(-dt * 9));
     pose(shown);
     if (!reducedMotion) {
       const k = 1 - Math.exp(-dt * 2.5);
@@ -784,7 +793,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
     // Opening particles
     const u = opening.mat.uniforms;
     const nearHero = shown < 1.05;
-    opening.points.visible = nearHero;
+    opening.points.visible = nearHero && opening.mat.uniforms.uScatter.value < 0.985;
     if (nearHero) {
       if (!reducedMotion) { u.uTime.value = elapsed; opening.update(dt, onPhase); }
       u.uScatter.value = reducedMotion ? (shown > 0.5 ? 1 : 0) : smooth(0.04, 0.75, shown);
@@ -824,27 +833,30 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
     dirty = false;
     if (!readyFired) { readyFired = true; onReady?.(); onPhase?.(opening.labelNow()); }
 
-    // Adaptive quality: lower resolution first, then drop the glow pass, then halve the particles.
-    frames++;
-    if (dt > 0.028) slowFrames++;
-    if (frames === 90) {
-      if (slowFrames > 45) {
-        if (dpr > 1) { dpr = Math.max(1, dpr - 0.35); resize(true); }
+    // Adaptive quality: if the average frame over ~0.7s is slower than ~50fps, step down one
+    // notch — edge smoothing, then resolution, then the glow pass, then half the particles.
+    if (dt > 0 && dt < 0.2 && elapsed > 1.2) { frameSum += dt; frames++; }
+    if (frames >= 40) {
+      const avg = frameSum / frames;
+      frames = 0; frameSum = 0;
+      if (avg > 0.02 && elapsed - lastDrop > 1.5) {
+        lastDrop = elapsed;
+        if (rt.samples > 0) { composer.renderTarget1.samples = 0; composer.renderTarget2.samples = 0; composer.renderTarget1.dispose(); composer.renderTarget2.dispose(); }
+        else if (dpr > 1) { dpr = Math.max(1, dpr - 0.25); resize(true); }
         else if (useBloom) useBloom = false;
-        else opening.points.geometry.setDrawRange(0, (N / 2) | 0);
+        else if (!halved) { halved = true; opening.points.geometry.setDrawRange(0, (N / 2) | 0); }
       }
-      frames = 0; slowFrames = 0;
     }
 
     const settling = Math.abs(target - shown) > 0.0005;
     const pointerMoving = Math.abs(tx - px) + Math.abs(ty - py) > 0.002;
     const busy = settling || dirty || clapState === 1 || pointerMoving || ((nearWork || nearHero) && !reducedMotion);
     idle = busy ? 0 : idle + dt;
-    if (!document.hidden && (reducedMotion ? busy : idle < 2)) raf = requestAnimationFrame(frame);
+    if (!document.hidden && !paused && (reducedMotion ? busy : idle < 2)) raf = requestAnimationFrame(frame);
   }
 
   let raf = 0, idle = 0;
-  const kick = () => { if (!raf && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  const kick = () => { if (!raf && !document.hidden && !paused) { last = performance.now(); raf = requestAnimationFrame(frame); } };
   window.addEventListener('scroll', kick, { passive: true });
   window.addEventListener('pointermove', kick, { passive: true });
   canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); cancelAnimationFrame(raf); raf = 0; onLost?.(); });
@@ -855,5 +867,12 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
 
   resize(true);
   kick();
-  return { renderer, scene, camera };
+  return {
+    renderer, scene, camera,
+    // Stop drawing while something covers the studio (e.g. the film player).
+    setPaused(v) {
+      paused = !!v;
+      if (paused) { cancelAnimationFrame(raf); raf = 0; monitors.forEach((m) => m.pause()); } else kick();
+    },
+  };
 }

@@ -7,6 +7,7 @@ const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const reduceMotion = document.documentElement.classList.contains('reduce-motion');
+const app = { studio: null, smooth: null };
 
 const ICON_PLAY = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
 
@@ -25,6 +26,7 @@ async function boot() {
   wireHeader();
   wireNav();
   wireServices();
+  setupSmoothScroll();
   wireFilmDialog(content.works);
   wireForm(content.contact, content.profile);
   wireCopy();
@@ -207,10 +209,18 @@ function wireFilmDialog(works) {
       title="${esc(w.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen"></iframe>`;
     $('[data-film-link]').href = w.vertical ? `https://youtube.com/shorts/${w.youtubeId}` : `https://youtu.be/${w.youtubeId}`;
     dialog.showModal();
+    // While a film plays, stop the studio and smooth scroll behind it (saves battery, no fan noise).
+    app.studio?.setPaused(true);
+    app.smooth?.stop();
   });
   $('[data-film-close]').addEventListener('click', close);
   dialog.addEventListener('click', (e) => { if (e.target === dialog) close(); });
-  dialog.addEventListener('close', () => { frame.innerHTML = ''; opener?.focus(); });
+  dialog.addEventListener('close', () => {
+    frame.innerHTML = '';
+    app.studio?.setPaused(false);
+    app.smooth?.start();
+    opener?.focus();
+  });
 }
 
 function wireForm(contact, profile) {
@@ -304,6 +314,18 @@ function trackScenes() {
   };
 }
 
+/* Smooth wheel/trackpad scrolling. Not on touch screens (native is already smooth)
+   and not for people who asked their system for reduced motion. */
+async function setupSmoothScroll() {
+  if (reduceMotion || !matchMedia('(pointer: fine)').matches) return;
+  try {
+    const { createSmoothScroll } = await import('./scroll.bundle.js?v=7');
+    app.smooth = createSmoothScroll({ headerOffset: () => (document.querySelector('[data-header]')?.offsetHeight || 68) + 8 });
+  } catch (err) {
+    console.warn('Smooth scrolling unavailable; using native scrolling.', err);
+  }
+}
+
 function loadStudio(content, scroll) {
   const stage = $('.stage');
   const canvas = $('[data-stage-canvas]');
@@ -315,8 +337,8 @@ function loadStudio(content, scroll) {
 
   const start = async () => {
     try {
-      const { mountStudio } = await import('./world.bundle.js?v=6');
-      mountStudio({
+      const { mountStudio } = await import('./world.bundle.js?v=7');
+      app.studio = await mountStudio({
         canvas,
         progress: () => scroll.get(),
         sceneCount: scroll.count,

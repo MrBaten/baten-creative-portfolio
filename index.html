@@ -192,8 +192,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" />
-  <link rel="stylesheet" href="./src/styles/site.css?v=6" />
-  <link rel="modulepreload" href="./src/app/main.js?v=6" />
+  <link rel="stylesheet" href="./src/styles/site.css?v=7" />
+  <link rel="modulepreload" href="./src/app/main.js?v=7" />
 
   <script>
     /* Runs before first paint: lets CSS know scripts are on and whether motion is reduced. */
@@ -227,7 +227,7 @@
       <span class="menu-icon" aria-hidden="true"></span>
     </button>
   </header>
-  <nav class="mobile-menu" id="mobile-menu" aria-label="Main" hidden data-mobile-menu>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Main" hidden data-mobile-menu data-lenis-prevent>
     <a href="#work">Work</a>
     <a href="#services">Services</a>
     <a href="#process">Process</a>
@@ -260,7 +260,7 @@
 
   <footer class="site-footer" data-slot="footer"></footer>
 
-  <dialog class="film-dialog" data-film-dialog aria-labelledby="film-dialog-title">
+  <dialog class="film-dialog" data-film-dialog data-lenis-prevent aria-labelledby="film-dialog-title">
     <div class="film-dialog-inner">
       <div class="film-dialog-head">
         <h2 id="film-dialog-title" data-film-title></h2>
@@ -281,6 +281,6 @@
     </div>
   </noscript>
 
-  <script type="module" src="./src/app/main.js?v=6"></script>
+  <script type="module" src="./src/app/main.js?v=7"></script>
 </body>
 </html>

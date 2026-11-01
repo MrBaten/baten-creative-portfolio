@@ -66,13 +66,18 @@ src/assets/baten/        Photos, avatar, share card
   The 3D studio is drawn behind it and loads after the text.
 - Without WebGL, or with data saver on, the page shows a soft studio backdrop instead.
 - With "reduce motion" turned on, the camera follows the scroll with no extra animation.
-- The 3D lowers its own resolution on slow devices.
+- The 3D measures its own frame rate and steps down on slow devices: edge smoothing, then
+  resolution, then the glow, then half the particles. It stops drawing when nothing moves.
+- Mouse and trackpad scrolling is smoothed (Lenis) so the page and the 3D move together.
+  Phones keep native scrolling; it's off for people who turn on "reduce motion".
+- Avoid `backdrop-filter` blur on anything that sits over the 3D: it forces the browser to
+  re-blur the moving canvas every frame.
 
 ### Editing the 3D studio (developers)
 
 ```bash
 npm install
-npm run build:3d   # rebuild src/app/world.bundle.js after editing src/3d/world.js
+npm run build      # rebuild src/app/world.bundle.js (3D) and src/app/scroll.bundle.js (smooth scroll)
 ```
 
 When you change `site.css`, `main.js` or the bundle, bump the `?v=` number on their links in

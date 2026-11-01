@@ -1,14 +1,16 @@
 {
   "name": "baten-creative-portfolio",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "description": "Portfolio of Md Abu Baten - AI Creative Director & Generative Video Specialist",
   "scripts": {
     "build:3d": "esbuild src/3d/world.js --bundle --format=esm --minify --target=es2020 --legal-comments=eof --outfile=src/app/world.bundle.js",
-    "build": "npm run build:3d"
+    "build:scroll": "esbuild src/3d/smooth-scroll.js --bundle --format=esm --minify --target=es2020 --legal-comments=eof --outfile=src/app/scroll.bundle.js",
+    "build": "npm run build:3d && npm run build:scroll"
   },
   "devDependencies": {
     "esbuild": "0.24.0",
+    "lenis": "1.1.13",
     "three": "0.170.0"
   }
 }
