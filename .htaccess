@@ -17,7 +17,7 @@ RewriteRule ^(.*)$ https://optiobyte.com/$1 [L,R=301]
 ErrorDocument 404 /404.html
 
 # 4. Block Sensitive Files and Hidden Directories
-<FilesMatch "(^\.env|^\.git|^\.DS_Store|package\.json|package-lock\.json|\.log$|^tailwind\.config\.cjs$|^README\.md$)">
+<FilesMatch "(^\.env|^\.git|^\.DS_Store|package\.json|package-lock\.json|\.log$|^README\.md$)">
   Order allow,deny
   Deny from all
 </FilesMatch>
@@ -47,6 +47,27 @@ RedirectMatch 404 ^/(\.git|\.github|scripts|node_modules|src/3d)(/|$)
   # Content-Security-Policy tailored for optiobyte.com
   Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://i.ytimg.com https://images.unsplash.com https://optiobyte.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://formsubmit.co; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co; upgrade-insecure-requests"
 </IfModule>
+
+# 5a. Pages: always revalidate, so a deploy never leaves visitors on an old page
+#     that points at files which no longer exist.
+<FilesMatch "\.html$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, must-revalidate"
+  </IfModule>
+  <IfModule mod_expires.c>
+    ExpiresActive Off
+  </IfModule>
+</FilesMatch>
+
+# 5b. The content file is edited often: always revalidate it so edits show up immediately
+<FilesMatch "^content\.js$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, must-revalidate"
+  </IfModule>
+  <IfModule mod_expires.c>
+    ExpiresActive Off
+  </IfModule>
+</FilesMatch>
 
 # 6. Enable Gzip / Deflate Compression
 <IfModule mod_deflate.c>
