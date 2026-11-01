@@ -209,9 +209,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Handjet:ELGR,ELSH,wght@1..2,0..16,100..900&family=Inter:wght@300;400;500;600;700&family=Just+Me+Again+Down+Here&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 
   <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="./src/styles/main.css" />
+  <link rel="stylesheet" href="./src/styles/main.css?v=3" />
   <!-- Compiled Tailwind utilities (build: npm run build:css). Loaded after main.css, the same order the old CDN used. -->
-  <link rel="stylesheet" href="./src/styles/tailwind.css" />
+  <link rel="stylesheet" href="./src/styles/tailwind.css?v=3" />
 
 
   <!-- Boot flags: runs before first paint. `js` lets CSS hide things only when scripts can reveal them;
@@ -1825,8 +1825,8 @@
 
   <!-- Module Scripts -->
   <script type="module">
-    import { portfolioData } from './src/data/portfolioData.js';
-    import { MotionEngine } from './src/components/MotionEngine.js';
+    import { portfolioData } from './src/data/portfolioData.js?v=3';
+    import { MotionEngine } from './src/components/MotionEngine.js?v=3';
 
     // ─── THE REEL: load the 3D scene only as it approaches the viewport ───
     (function setupReel() {
@@ -1846,7 +1846,7 @@
         if (!entries.some((e) => e.isIntersecting)) return;
         observer.disconnect();
         try {
-          const { mountReel } = await import('./src/components/reel3d.bundle.js');
+          const { mountReel } = await import('./src/components/reel3d.bundle.js?v=3');
           const small = window.matchMedia('(max-width: 767px)').matches;
           const reel = mountReel({
             section,
