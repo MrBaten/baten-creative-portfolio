@@ -63,10 +63,29 @@ Open your browser at **[http://localhost:3000](http://localhost:3000)** to verif
 | **Social Links & Contact** | [`src/data/portfolioData.js`](src/data/portfolioData.js) & [`index.html`](index.html) | Update creator profile links and header/footer anchors. |
 | **Color Tokens & Styling** | [`src/styles/main.css`](src/styles/main.css) | Custom design system variables and tactile physics rules. |
 | **Physics & Interactions** | [`src/components/MotionEngine.js`](src/components/MotionEngine.js) | Smooth velocity scroll, viewfinder tracking, and polaroid parallax tilt. |
+| **3D Reel (film strip)** | [`src/3d/reel.js`](src/3d/reel.js) | Scroll-driven Three.js scene. Rebuild the bundle after editing (see below). |
+| **Reel frames** | [`src/assets/reel/`](src/assets/reel/) | 12 stills packed into one atlas (6 × 2, 360 × 540 each). |
 
 ---
 
-### 3. Commit & Push to GitHub
+### 3. Rebuild CSS / 3D when you change them
+
+The site has no build step on the server — the compiled files are committed. Run these locally
+whenever you change Tailwind classes or the 3D scene:
+
+```bash
+npm install          # once
+npm run build:css    # after changing classes in index.html, 404.html or src/ → src/styles/tailwind.css
+npm run build:3d     # after editing src/3d/reel.js → src/components/reel3d.bundle.js
+npm run build        # both
+```
+
+> Use the named colour classes for opacity (`text-ca-ink/70`, `bg-ca-surface/95`).
+> `text-[var(--ca-ink)]/70` compiles to **nothing** in Tailwind 3 — the opacity form only works on named colours.
+
+---
+
+### 4. Commit & Push to GitHub
 
 Once your local changes are verified, deploy them with three commands in your terminal:
 
@@ -83,7 +102,7 @@ git push origin main
 
 ---
 
-### 4. How the Update Goes Live
+### 5. How the Update Goes Live
 
 #### Method A: 100% Automatic (Auto-Deployment Webhook)
 If you have configured the Hostinger Webhook (see setup instructions below):
@@ -101,7 +120,7 @@ If you haven't enabled webhooks:
 
 ---
 
-### 5. Emergency Rollback (If something breaks)
+### 6. Emergency Rollback (If something breaks)
 
 If you push an update with a typo or bug and want to revert immediately:
 ```bash
@@ -159,12 +178,12 @@ This section documents the initial infrastructure configuration for reference:
 | :--- | :--- | :--- |
 | **HTTPS Enforcement** | Strict 301 rewrites from HTTP to HTTPS | [`.htaccess`](.htaccess#L8-L11) |
 | **Canonical Domain** | Redirects `www.optiobyte.com` ➔ `optiobyte.com` | [`.htaccess`](.htaccess#L13-L16) |
-| **Content Security Policy (CSP)** | Whitelisted Google Fonts, Tailwind CDN, YouTube, FormSubmit | [`.htaccess`](.htaccess#L37) |
+| **Content Security Policy (CSP)** | Whitelisted Google Fonts, YouTube, FormSubmit (Tailwind and Three.js are self-hosted) | [`.htaccess`](.htaccess) |
 | **Strict-Transport-Security (HSTS)** | `max-age=31536000; includeSubDomains; preload` | [`.htaccess`](.htaccess#L34) |
 | **Clickjacking & MIME Protection** | `X-Frame-Options: SAMEORIGIN` & `nosniff` | [`.htaccess`](.htaccess#L22-L28) |
 | **DOM XSS Sanitization** | `sanitizeHTML()` helper encodes user inputs | [`index.html`](index.html#L217-L226) |
 | **Form Spam & Bot Defense** | Hidden `_honey` trap input + FormSubmit CAPTCHA | [`index.html`](index.html#L1600-L1602) |
-| **Sensitive File Protection** | Denies web access to `.git`, `.env`, `.DS_Store` | [`.htaccess`](.htaccess#L18-L21) |
+| **Sensitive File Protection** | Denies web access to `.git/`, `.github/`, `scripts/`, `src/3d/`, `.env`, `README.md`, build configs | [`.htaccess`](.htaccess) |
 | **Speed Optimization** | Gzip compression + 1-year browser cache headers | [`.htaccess`](.htaccess#L40-L59) |
 
 ---
@@ -184,7 +203,8 @@ baten-creative-portfolio/
 ├── favicon.ico                  # Site favicon
 ├── favicon.png                  # PNG favicon
 ├── index.html                   # Main single-page application & SEO schemas
-├── package.json                 # Node project descriptor
+├── package.json                 # Build scripts (Tailwind + 3D bundle)
+├── tailwind.config.cjs          # Tailwind theme (brand colours & fonts)
 ├── README.md                    # Project, deployment, and upgradation manual
 ├── robots.txt                   # Search crawler directives
 ├── sitemap.xml                  # XML sitemap with image metadata for Google indexing
@@ -194,13 +214,19 @@ baten-creative-portfolio/
 └── src/
     ├── assets/
     │   ├── Projects/            # Commercial 4K/vertical MP4 videos
+    │   ├── reel/                # Frame atlas for the 3D reel (desktop + mobile sizes)
     │   └── baten/               # High-res portraits, avatars, brand stamps
+    ├── 3d/
+    │   └── reel.js              # THE REEL: scroll-driven 3D film strip (source)
     ├── components/
-    │   └── MotionEngine.js      # Spring physics, scroll velocity, viewfinder tracking
+    │   ├── MotionEngine.js      # Spring physics, scroll velocity, viewfinder tracking
+    │   └── reel3d.bundle.js     # Built from src/3d/reel.js + tree-shaken three.js (do not edit)
     ├── data/
     │   └── portfolioData.js     # Single source of truth for projects, services, bio
     └── styles/
-        └── main.css             # Design tokens, CRT grain, polaroid borders, brutalist tape
+        ├── main.css             # Design tokens, CRT grain, polaroid borders, brutalist tape, reel styles
+        ├── tailwind.input.css   # Tailwind entry
+        └── tailwind.css         # Compiled Tailwind (generated — npm run build:css)
 ```
 
 ---

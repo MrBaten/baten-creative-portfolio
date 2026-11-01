@@ -21,8 +21,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Handjet:wght@700&family=Inter:wght@400;600&family=Just+Me+Again+Down+Here&display=swap" rel="stylesheet" />
 
   <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="./src/styles/main.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/src/styles/main.css" />
+  <link rel="stylesheet" href="/src/styles/tailwind.css" />
 </head>
 <body class="min-h-full flex flex-col justify-between bg-[var(--ca-surface)] text-[var(--ca-ink)] antialiased selection:bg-[var(--ca-yellow)] selection:text-[var(--ca-ink)] p-6 sm:p-12">
   
@@ -32,8 +32,8 @@
   <!-- Header -->
   <header class="relative z-10 flex items-center justify-between">
     <a href="/" class="group inline-flex items-center gap-3 font-bold tracking-tight text-[var(--ca-ink)]">
-      <span class="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden border-2 border-[var(--ca-ink)]/30 shadow-md bg-[var(--ca-orange)]/10">
-        <img src="./src/assets/baten/baten-avatar.png" width="44" height="44" alt="Md Abu Baten" class="h-full w-full object-cover" />
+      <span class="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden border-2 border-ca-ink/30 shadow-md bg-ca-orange/10">
+        <img src="/src/assets/baten/baten-avatar-128.webp" width="44" height="44" alt="Md Abu Baten" class="h-full w-full object-cover" />
       </span>
       <span class="ca-mono text-sm uppercase tracking-widest">Md Abu Baten</span>
     </a>
@@ -45,8 +45,8 @@
   <!-- 404 Main Content -->
   <main class="relative z-10 my-auto flex flex-col items-center text-center py-16">
     <div class="relative inline-block">
-      <span aria-hidden="true" class="ca-tape-strip -left-6 -top-3 z-10 h-6 w-24 -rotate-[12deg] bg-[var(--ca-yellow-soft)]/80"></span>
-      <span aria-hidden="true" class="ca-tape-strip -right-6 -top-3 z-10 h-6 w-24 rotate-[12deg] bg-[var(--ca-pink-soft)]/80"></span>
+      <span aria-hidden="true" class="ca-tape-strip -left-6 -top-3 z-10 h-6 w-24 -rotate-[12deg] bg-ca-yellow-soft/80"></span>
+      <span aria-hidden="true" class="ca-tape-strip -right-6 -top-3 z-10 h-6 w-24 rotate-[12deg] bg-ca-pink-soft/80"></span>
       
       <div class="ca-doodle-box border-[3px] border-[var(--ca-ink)] bg-[var(--ca-yellow)] px-8 py-6 sm:px-16 sm:py-10 shadow-[8px_8px_0_var(--ca-ink)]">
         <p class="ca-hand text-3xl sm:text-4xl text-[var(--ca-ink)] mb-2">scene not found</p>
@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <p class="mt-8 max-w-md text-base sm:text-lg text-[var(--ca-ink)]/80 leading-relaxed">
+    <p class="mt-8 max-w-md text-base sm:text-lg text-ca-ink/80 leading-relaxed">
       This cut didn't make the final edit. The URL might have changed, or this scene hasn't been generated yet.
     </p>
 
@@ -75,7 +75,7 @@
   </main>
 
   <!-- Footer -->
-  <footer class="relative z-10 text-center ca-mono text-xs text-[var(--ca-ink)]/60">
+  <footer class="relative z-10 text-center ca-mono text-xs text-ca-ink/60">
     © 2026 Md Abu Baten · AI Creative Director &amp; Generative Video Specialist · Dhaka, Bangladesh
   </footer>
 

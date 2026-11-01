@@ -32,7 +32,8 @@
   <meta property="og:description" content="Directing cinematic AI films, broadcast-ready AI commercials, and generative video campaigns for ambitious brands worldwide." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://optiobyte.com/" />
-  <meta property="og:image" content="https://optiobyte.com/src/assets/baten/baten-standing.jpg" />
+  <meta property="og:image" content="https://optiobyte.com/src/assets/baten/og-card.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Md Abu Baten - AI Creative Director &amp; Generative Video Specialist" />
@@ -41,7 +42,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Md Abu Baten · AI Creative Director &amp; Generative Video Specialist" />
   <meta name="twitter:description" content="Cinematic AI commercials, brand films, and generative video direction for ambitious global brands." />
-  <meta name="twitter:image" content="https://optiobyte.com/src/assets/baten/baten-standing.jpg" />
+  <meta name="twitter:image" content="https://optiobyte.com/src/assets/baten/og-card.jpg" />
   <meta name="twitter:image:alt" content="Md Abu Baten - AI Creative Director &amp; Generative Video Specialist" />
 
   <!-- JSON-LD Structured Data Schema Graph -->
@@ -209,9 +210,25 @@
 
   <!-- Core Stylesheet -->
   <link rel="stylesheet" href="./src/styles/main.css" />
+  <!-- Compiled Tailwind utilities (build: npm run build:css). Loaded after main.css, the same order the old CDN used. -->
+  <link rel="stylesheet" href="./src/styles/tailwind.css" />
 
-  <!-- Tailwind CSS CDN (swap for self-hosted build before production) -->
-  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Boot flags: runs before first paint. `js` lets CSS hide things only when scripts can reveal them;
+       `no-splash` skips the intro for reduced-motion users and for repeat views in the same session. -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      try {
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce || sessionStorage.getItem('ob-splash-seen')) root.classList.add('no-splash');
+        sessionStorage.setItem('ob-splash-seen', '1');
+      } catch (e) { /* storage blocked: just play the intro */ }
+      // Fail-safe: whatever happens to the main script, never leave the page hidden.
+      setTimeout(function () { root.classList.add('ob-failsafe'); }, 7000);
+    })();
+  </script>
 
   <!-- Security Utility: HTML Sanitizer (prevents DOM XSS via innerHTML injection) -->
   <script>
@@ -223,37 +240,6 @@
       const temp = document.createElement('div');
       temp.textContent = String(str ?? '');
       return temp.innerHTML;
-    }
-  </script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'ca-surface': '#fdfdfb',
-            'ca-ink': '#191510',
-            'ca-gray': '#7a7263',
-            'ca-chrome': '#ebe4d3',
-            'ca-tick': '#c4b9a3',
-            'ca-blue': '#2b57d6',
-            'ca-cyan': '#b7c6ef',
-            'ca-yellow': '#f7c948',
-            'ca-yellow-soft': '#f4e5b2',
-            'ca-magenta': '#ff4d8d',
-            'ca-pink-soft': '#ffc6da',
-            'ca-green': '#16b06a',
-            'ca-mint': '#a9dfc6',
-            'ca-orange': '#ff6a35',
-          },
-          fontFamily: {
-            display: ['"Archivo Black"', '"Handjet"', 'Impact', 'sans-serif'],
-            hand: ['"Just Me Again Down Here"', 'cursive'],
-            mono: ['"DM Mono"', 'monospace'],
-            sans: ['Inter', 'sans-serif'],
-            grotesk: ['"Bricolage Grotesque"', '"Space Grotesk"', 'sans-serif'],
-          }
-        }
-      }
     }
   </script>
 </head>
@@ -278,14 +264,14 @@
   </div>
 
   <!-- STICKY HEADER -->
-  <header class="sticky top-0 z-[50] bg-[var(--ca-surface)]/95 backdrop-blur-md border-b border-[var(--ca-ink)]/10">
+  <header class="sticky top-0 z-[50] bg-ca-surface/95 backdrop-blur-md border-b border-ca-ink/10">
     <div class="ca-container flex items-stretch justify-between py-0">
       
       <!-- Brand Portrait Avatar & Desktop Navigation -->
       <div class="flex items-stretch gap-3 sm:gap-4">
         <a aria-label="Md Abu Baten Portfolio Home" class="flex items-center pr-2 transition-transform active:scale-95" href="#">
-          <span class="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden border-2 border-[var(--ca-ink)]/30 shadow-md hover:scale-105 transition-transform bg-[var(--ca-orange)]/10">
-            <img src="./src/assets/baten/baten-avatar.png" width="44" height="44" alt="Md Abu Baten" class="h-full w-full object-cover" />
+          <span class="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden border-2 border-ca-ink/30 shadow-md hover:scale-105 transition-transform bg-ca-orange/10">
+            <img src="./src/assets/baten/baten-avatar-128.webp" width="44" height="44" alt="Md Abu Baten" class="h-full w-full object-cover" />
           </span>
         </a>
 
@@ -376,7 +362,7 @@
     </div>
 
     <!-- Mobile Drawer Navigation -->
-    <div id="mobileDrawer" class="hidden border-b border-[var(--ca-ink)]/10 bg-[var(--ca-surface)] px-4 py-6 md:hidden">
+    <div id="mobileDrawer" class="hidden border-b border-ca-ink/10 bg-[var(--ca-surface)] px-4 py-6 md:hidden">
       <nav class="flex flex-col gap-3 font-mono text-sm font-bold uppercase tracking-widest" aria-label="Mobile Navigation">
         <a href="#" class="mobile-nav-link px-4 py-3 bg-[var(--ca-yellow)] text-[var(--ca-ink)] rounded-lg">Overview</a>
         <a href="#about" class="mobile-nav-link px-4 py-3 hover:bg-[var(--ca-chrome)] text-[var(--ca-ink)] rounded-lg">About</a>
@@ -428,7 +414,7 @@
           </span>
 
           <!-- Status Indicator with Solid Blue Dot (Relocated to Top & Positioned Closer to Header) -->
-          <p class="ca-mono mb-3 sm:mb-4 inline-flex max-w-full items-center justify-center gap-2.5 px-3 py-1.5 text-center text-xs font-bold uppercase tracking-[0.2em] text-[var(--ca-ink)] sm:text-sm rounded-full bg-[var(--ca-ink)]/5 border border-[var(--ca-ink)]/10" data-motion="reveal" data-delay="0.02">
+          <p class="ca-mono mb-3 sm:mb-4 inline-flex max-w-full items-center justify-center gap-2.5 px-3 py-1.5 text-center text-xs font-bold uppercase tracking-[0.2em] text-[var(--ca-ink)] sm:text-sm rounded-full bg-ca-ink/5 border border-ca-ink/10" data-motion="reveal" data-delay="0.02">
             <span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[var(--ca-blue)] animate-pulse"></span>
             Directing cinematic AI campaigns for ambitious global brands
           </p>
@@ -460,7 +446,7 @@
           <div class="relative mt-4 sm:mt-6" data-motion="pop" data-delay="0.15">
             <!-- Doodle Box Container -->
             <div class="ca-doodle-box relative inline-block border-[3px] border-[var(--ca-orange)] px-6 py-2 sm:px-12 sm:py-3 lg:px-16 lg:py-4 bg-transparent cursor-crosshair">
-              <span class="ca-signature-baten text-[24vw] leading-[0.95] tracking-tight text-[var(--ca-ink)] sm:text-9xl lg:text-[12.5rem]" data-baten-anim style="visibility:hidden">
+              <span class="ca-signature-baten text-[24vw] leading-[0.95] tracking-tight text-[var(--ca-ink)] sm:text-9xl lg:text-[12.5rem]" data-baten-anim>
                 BATEN
               </span>
             </div>
@@ -523,7 +509,7 @@
         </div>
 
         <!-- Primary Value Proposition Headline (Strict Single H1 on Page) -->
-        <h1 class="mt-7 sm:mt-9 w-full max-w-5xl font-semibold text-[var(--ca-ink)] text-center px-2 select-none" data-motion="reveal" data-delay="0.3">
+        <h1 class="mt-7 sm:mt-9 lg:mt-16 w-full max-w-5xl font-semibold text-[var(--ca-ink)] text-center px-2 select-none" data-motion="reveal" data-delay="0.3">
           <span class="hero-headline-line">
             I direct cinematic AI films that 
             <svg viewBox="0 0 40 40" class="inline-block align-[-0.08em] ca-spin-slow h-[0.9em] w-[0.9em] ml-2" aria-hidden="true">
@@ -550,7 +536,7 @@
         </h1>
 
         <!-- Supporting Value Proposition Paragraph -->
-        <p class="mt-5 max-w-2xl text-center text-base sm:text-lg lg:text-xl text-[var(--ca-ink)]/80 font-normal leading-relaxed px-4" data-motion="reveal" data-delay="0.32">
+        <p class="mt-5 max-w-2xl text-center text-base sm:text-lg lg:text-xl text-ca-ink/80 font-normal leading-relaxed px-4" data-motion="reveal" data-delay="0.32">
           Senior creative direction meets generative video pipelines—delivering broadcast-grade commercial films, tactile ad worlds, and visual campaigns with cinematic taste and high-velocity execution.
         </p>
 
@@ -576,6 +562,54 @@
       </div>
     </section>
 
+    <!-- THE REEL: scroll-driven 3D film strip (src/3d/reel.js). Stills come from the commercials in Featured Works. -->
+    <section id="reel" class="reel-section" aria-labelledby="reel-title">
+      <div class="reel-stage" data-reel-stage>
+        <div class="reel-canvas-host" data-reel-canvas></div>
+
+        <!-- Static strip: shown until the 3D scene is ready, and instead of it when WebGL is unavailable -->
+        <div class="reel-fallback" aria-hidden="true">
+          <div class="reel-fallback-strip">
+            <span style="background-position:0% 0%"></span><span style="background-position:20% 0%"></span><span style="background-position:40% 0%"></span><span style="background-position:60% 0%"></span>
+            <span style="background-position:80% 0%"></span><span style="background-position:100% 0%"></span><span style="background-position:0% 100%"></span><span style="background-position:20% 100%"></span>
+            <span style="background-position:40% 100%"></span><span style="background-position:60% 100%"></span><span style="background-position:80% 100%"></span><span style="background-position:100% 100%"></span>
+          </div>
+        </div>
+
+        <div class="reel-vignette" aria-hidden="true"></div>
+        <div class="reel-grain ca-grain" aria-hidden="true"></div>
+
+        <!-- Viewfinder HUD -->
+        <div class="reel-hud reel-hud--top" aria-hidden="true">
+          <span class="reel-rec"><span class="reel-rec-dot"></span>REC</span>
+          <span>TC <span data-reel-timecode>00:00:00:00</span></span>
+          <span class="reel-hud-meta">35MM · 24 FPS</span>
+        </div>
+        <span class="reel-corner reel-corner--tl" aria-hidden="true"></span>
+        <span class="reel-corner reel-corner--tr" aria-hidden="true"></span>
+        <span class="reel-corner reel-corner--bl" aria-hidden="true"></span>
+        <span class="reel-corner reel-corner--br" aria-hidden="true"></span>
+
+        <div class="reel-copy">
+          <span class="reel-tape ca-hand">now screening</span>
+          <h2 id="reel-title" class="reel-title ca-display">The Reel</h2>
+          <p class="reel-lede">
+            Every frame on this strip is a still from my commercial films &mdash; Coffee Commercials, MC Burger and Zingora Crunch. Scroll to roll film.
+          </p>
+          <a href="#work" class="reel-cta ca-mono">
+            Watch the films
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="h-4 w-4" aria-hidden="true"><path d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+        </div>
+
+        <div class="reel-hud reel-hud--bottom" aria-hidden="true">
+          <span class="reel-onscreen">On screen <strong data-reel-film>Coffee Commercials</strong></span>
+          <span class="reel-hint">Drag to spin</span>
+          <span class="reel-progress"><span data-reel-progress></span></span>
+        </div>
+      </div>
+    </section>
+
     <!-- ABOUT SECTION -->
     <section id="about" class="ca-section scroll-mt-24 pb-20 sm:pb-28">
       
@@ -596,13 +630,13 @@
           <div class="absolute left-[0%] top-[24%] w-52 xl:left-[2%] xl:w-60 -rotate-[12.6deg]">
             <span class="pointer-events-auto block w-full">
               <figure class="relative inline-block bg-white p-2 pb-1 shadow-[0_6px_18px_rgba(17,18,18,0.22)] w-full transition-transform duration-300 hover:scale-105">
-                <span class="ca-tape-strip -left-4 -top-2 z-10 h-5 w-16 -rotate-[38deg] bg-[var(--ca-cyan)]/70"></span>
-                <span class="ca-tape-strip -right-4 -top-2 z-10 h-5 w-16 rotate-[38deg] bg-[var(--ca-yellow-soft)]/70"></span>
+                <span class="ca-tape-strip -left-4 -top-2 z-10 h-5 w-16 -rotate-[38deg] bg-ca-cyan/70"></span>
+                <span class="ca-tape-strip -right-4 -top-2 z-10 h-5 w-16 rotate-[38deg] bg-ca-yellow-soft/70"></span>
                 
                 <div class="aspect-[4/5] w-full overflow-hidden">
                   <img src="./src/assets/baten/baten-laptop.jpg" width="240" height="300" loading="lazy" decoding="async" alt="Md Abu Baten - AI Creative Director" class="h-full w-full object-cover object-top" />
                 </div>
-                <figcaption class="ca-hand mt-1 text-center text-lg leading-tight text-[var(--ca-ink)]/70">2026</figcaption>
+                <figcaption class="ca-hand mt-1 text-center text-lg leading-tight text-ca-ink/70">2026</figcaption>
               </figure>
             </span>
           </div>
@@ -611,13 +645,13 @@
           <div class="absolute right-[0%] top-[12%] w-52 xl:right-[2%] xl:w-60 rotate-[14.4deg]">
             <span class="pointer-events-auto block w-full">
               <figure class="relative inline-block bg-white p-2 pb-1 shadow-[0_6px_18px_rgba(17,18,18,0.22)] w-full transition-transform duration-300 hover:scale-105">
-                <span class="ca-tape-strip -left-4 -top-2 z-10 h-5 w-16 -rotate-[38deg] bg-[var(--ca-cyan)]/70"></span>
-                <span class="ca-tape-strip -right-4 -top-2 z-10 h-5 w-16 rotate-[38deg] bg-[var(--ca-yellow-soft)]/70"></span>
+                <span class="ca-tape-strip -left-4 -top-2 z-10 h-5 w-16 -rotate-[38deg] bg-ca-cyan/70"></span>
+                <span class="ca-tape-strip -right-4 -top-2 z-10 h-5 w-16 rotate-[38deg] bg-ca-yellow-soft/70"></span>
                 
                 <div class="aspect-[4/5] w-full overflow-hidden">
                   <img src="./src/assets/baten/baten-workspace.jpg" width="240" height="300" loading="lazy" decoding="async" alt="Minimal AI Film Creative Director Studio Workspace" class="h-full w-full object-cover object-center" />
                 </div>
-                <figcaption class="ca-hand mt-1 text-center text-lg leading-tight text-[var(--ca-ink)]/70">my workspace</figcaption>
+                <figcaption class="ca-hand mt-1 text-center text-lg leading-tight text-ca-ink/70">my workspace</figcaption>
               </figure>
             </span>
           </div>
@@ -639,8 +673,8 @@
           </div>
 
           <!-- Medium Bio Narrative -->
-          <div class="mt-8 mx-auto max-w-2xl text-left bg-white/70 p-6 sm:p-8 rounded-2xl border-2 border-[var(--ca-ink)]/15 shadow-sm" data-motion="reveal" data-delay="0.15">
-            <p class="text-sm sm:text-base text-[var(--ca-ink)]/85 leading-relaxed">
+          <div class="mt-8 mx-auto max-w-2xl text-left bg-white/70 p-6 sm:p-8 rounded-2xl border-2 border-ca-ink/15 shadow-sm" data-motion="reveal" data-delay="0.15">
+            <p class="text-sm sm:text-base text-ca-ink/85 leading-relaxed">
               Great films aren’t made by algorithms—they are made by taste, point of view, and storytelling. I combine senior creative direction with cutting-edge generative video pipelines to turn ambitious scripts into broadcast-grade commercial films in days, not months. From prompt-locked character continuity to 35mm anamorphic lighting and tactile sound design, I treat generative AI as a precision camera system and production engine for brands that refuse to blend in.
             </p>
           </div>
@@ -648,21 +682,21 @@
           <!-- Mobile Polaroids Row (< lg) -->
           <div class="mt-8 flex flex-wrap justify-center gap-4 sm:gap-6 lg:hidden" data-motion="reveal" data-delay="0.2">
             <figure class="relative inline-block bg-white p-2 pb-1 shadow-[0_6px_18px_rgba(17,18,18,0.22)] -rotate-3 w-36 sm:w-44">
-              <span aria-hidden="true" class="ca-tape-strip -left-3 -top-2 z-10 h-4 w-14 -rotate-[38deg] bg-[var(--ca-cyan)]/70"></span>
-              <span aria-hidden="true" class="ca-tape-strip -right-3 -top-2 z-10 h-4 w-14 rotate-[38deg] bg-[var(--ca-yellow-soft)]/70"></span>
+              <span aria-hidden="true" class="ca-tape-strip -left-3 -top-2 z-10 h-4 w-14 -rotate-[38deg] bg-ca-cyan/70"></span>
+              <span aria-hidden="true" class="ca-tape-strip -right-3 -top-2 z-10 h-4 w-14 rotate-[38deg] bg-ca-yellow-soft/70"></span>
               <div class="aspect-[4/5] w-full overflow-hidden">
                 <img src="./src/assets/baten/baten-laptop.jpg" width="180" height="225" loading="lazy" decoding="async" alt="Md Abu Baten - AI Creative Director" class="h-full w-full object-cover object-top" />
               </div>
-              <figcaption class="ca-hand mt-1 text-center text-base leading-tight text-[var(--ca-ink)]/70">2026</figcaption>
+              <figcaption class="ca-hand mt-1 text-center text-base leading-tight text-ca-ink/70">2026</figcaption>
             </figure>
 
             <figure class="relative inline-block bg-white p-2 pb-1 shadow-[0_6px_18px_rgba(17,18,18,0.22)] rotate-3 w-36 sm:w-44">
-              <span aria-hidden="true" class="ca-tape-strip -left-3 -top-2 z-10 h-4 w-14 -rotate-[38deg] bg-[var(--ca-cyan)]/70"></span>
-              <span aria-hidden="true" class="ca-tape-strip -right-3 -top-2 z-10 h-4 w-14 rotate-[38deg] bg-[var(--ca-yellow-soft)]/70"></span>
+              <span aria-hidden="true" class="ca-tape-strip -left-3 -top-2 z-10 h-4 w-14 -rotate-[38deg] bg-ca-cyan/70"></span>
+              <span aria-hidden="true" class="ca-tape-strip -right-3 -top-2 z-10 h-4 w-14 rotate-[38deg] bg-ca-yellow-soft/70"></span>
               <div class="aspect-[4/5] w-full overflow-hidden">
                 <img src="./src/assets/baten/baten-workspace.jpg" width="180" height="225" loading="lazy" decoding="async" alt="Minimal AI Film Studio Workspace" class="h-full w-full object-cover object-center" />
               </div>
-              <figcaption class="ca-hand mt-1 text-center text-base leading-tight text-[var(--ca-ink)]/70">my workspace</figcaption>
+              <figcaption class="ca-hand mt-1 text-center text-base leading-tight text-ca-ink/70">my workspace</figcaption>
             </figure>
           </div>
 
@@ -714,7 +748,7 @@
             <div class="rounded-2xl border-2 border-[var(--ca-ink)] bg-white p-6 shadow-[4px_4px_0_var(--ca-ink)]">
               <span class="ca-mono text-xs font-bold uppercase tracking-widest text-[var(--ca-yellow)] px-2.5 py-1 bg-[var(--ca-ink)] rounded-md inline-block">Rule 01</span>
               <h2 class="mt-3 text-xl font-bold tracking-tight text-[var(--ca-ink)]">Taste Over Technology</h2>
-              <p class="mt-2 text-sm text-[var(--ca-ink)]/75 leading-relaxed">
+              <p class="mt-2 text-sm text-ca-ink/75 leading-relaxed">
                 AI creates pixels; creative direction creates meaning. 35mm anamorphic glass, key-to-fill lighting ratios, and deliberate pacing must be directed with human taste from day one.
               </p>
             </div>
@@ -722,7 +756,7 @@
             <div class="rounded-2xl border-2 border-[var(--ca-ink)] bg-white p-6 shadow-[4px_4px_0_var(--ca-ink)]">
               <span class="ca-mono text-xs font-bold uppercase tracking-widest text-[var(--ca-cyan)] px-2.5 py-1 bg-[var(--ca-ink)] rounded-md inline-block">Rule 02</span>
               <h2 class="mt-3 text-xl font-bold tracking-tight text-[var(--ca-ink)]">Continuity &amp; Polish</h2>
-              <p class="mt-2 text-sm text-[var(--ca-ink)]/75 leading-relaxed">
+              <p class="mt-2 text-sm text-ca-ink/75 leading-relaxed">
                 Eliminating the uncanny AI sheen. Character face-mesh locking, consistent product materials, and optical flow tracking ensure seamless commercial cuts without morphing or distortion.
               </p>
             </div>
@@ -730,7 +764,7 @@
             <div class="rounded-2xl border-2 border-[var(--ca-ink)] bg-white p-6 shadow-[4px_4px_0_var(--ca-ink)]">
               <span class="ca-mono text-xs font-bold uppercase tracking-widest text-[var(--ca-pink-soft)] px-2.5 py-1 bg-[var(--ca-ink)] rounded-md inline-block">Rule 03</span>
               <h2 class="mt-3 text-xl font-bold tracking-tight text-[var(--ca-ink)]">Velocity Without Compromise</h2>
-              <p class="mt-2 text-sm text-[var(--ca-ink)]/75 leading-relaxed">
+              <p class="mt-2 text-sm text-ca-ink/75 leading-relaxed">
                 Traditional production takes months; raw AI generation lacks polish. We bridge both—delivering studio-grade commercial campaigns in days to let brands test and scale fast.
               </p>
             </div>
@@ -741,7 +775,7 @@
     </section>
 
     <!-- SERVICES SECTION -->
-    <section id="services" class="ca-section scroll-mt-24 py-16 sm:py-24 border-t border-[var(--ca-ink)]/10 bg-[var(--ca-chrome)]/25">
+    <section id="services" class="ca-section scroll-mt-24 py-16 sm:py-24 border-t border-ca-ink/10 bg-ca-chrome/25">
       <div class="ca-container">
         
         <div class="flex flex-col items-center text-center pb-12 sm:pb-16">
@@ -770,7 +804,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" data-motion="reveal" data-delay="0.2">
           
           <!-- Service 1: AI Commercials -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-yellow)] text-[var(--ca-ink)] border border-[var(--ca-ink)] rounded-full">
@@ -781,25 +815,25 @@
               <h2 class="mt-4 text-2xl font-bold tracking-tight text-[var(--ca-ink)]">
                 AI Commercials &amp; Brand Films
               </h2>
-              <p class="ca-hand mt-1 text-lg text-[var(--ca-ink)]/75 leading-tight">
+              <p class="ca-hand mt-1 text-lg text-ca-ink/75 leading-tight">
                 High-concept cinematic commercials from script to broadcast-ready master.
               </p>
-              <p class="mt-3 text-sm text-[var(--ca-ink)]/80 leading-relaxed">
+              <p class="mt-3 text-sm text-ca-ink/80 leading-relaxed">
                 Complete directorial execution of story-led commercial spots. I develop treatments, build prompt-locked character and product worlds, direct generative motion passes, and deliver polished editorial cuts ready for TV, web, and paid media.
               </p>
 
-              <div class="mt-5 pt-4 border-t border-[var(--ca-ink)]/10">
-                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-[var(--ca-ink)]/60 mb-2">Deliverables:</p>
+              <div class="mt-5 pt-4 border-t border-ca-ink/10">
+                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-ca-ink/60 mb-2">Deliverables:</p>
                 <div class="flex flex-wrap gap-1.5">
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Directorial Treatment</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Prompt-Locked Storyboards</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">15s / 30s / 60s Masters</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">DaVinci Color &amp; Mix</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Directorial Treatment</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Prompt-Locked Storyboards</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">15s / 30s / 60s Masters</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">DaVinci Color &amp; Mix</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-[var(--ca-ink)]/10">
+            <div class="mt-6 pt-4 border-t border-ca-ink/10">
               <a href="#contact" class="ca-mono inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[var(--ca-ink)] border-b-2 border-[var(--ca-ink)] pb-1 hover:text-[var(--ca-blue)] transition-colors">
                 Discuss a Commercial ➔
               </a>
@@ -807,7 +841,7 @@
           </div>
 
           <!-- Service 2: Generative Video Systems -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-green)] text-white border border-[var(--ca-ink)] rounded-full">
@@ -818,25 +852,25 @@
               <h2 class="mt-4 text-2xl font-bold tracking-tight text-[var(--ca-ink)]">
                 Generative Video &amp; Modular Ads
               </h2>
-              <p class="ca-hand mt-1 text-lg text-[var(--ca-ink)]/75 leading-tight">
+              <p class="ca-hand mt-1 text-lg text-ca-ink/75 leading-tight">
                 High-velocity visual creative testing without studio bottleneck.
               </p>
-              <p class="mt-3 text-sm text-[var(--ca-ink)]/80 leading-relaxed">
+              <p class="mt-3 text-sm text-ca-ink/80 leading-relaxed">
                 Modular video asset generation engineered for paid performance and organic social channels. Produce 20+ distinct visual hooks, lighting setups, and emotional angles per sprint to find winning creative and scale with conviction.
               </p>
 
-              <div class="mt-5 pt-4 border-t border-[var(--ca-ink)]/10">
-                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-[var(--ca-ink)]/60 mb-2">Deliverables:</p>
+              <div class="mt-5 pt-4 border-t border-ca-ink/10">
+                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-ca-ink/60 mb-2">Deliverables:</p>
                 <div class="flex flex-wrap gap-1.5">
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">20–40 Modular Cuts</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Multi-Ratio (9:16, 1:1, 16:9)</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Hook Variants</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Rapid Iteration Pipeline</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">20–40 Modular Cuts</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Multi-Ratio (9:16, 1:1, 16:9)</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Hook Variants</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Rapid Iteration Pipeline</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-[var(--ca-ink)]/10">
+            <div class="mt-6 pt-4 border-t border-ca-ink/10">
               <a href="#contact" class="ca-mono inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[var(--ca-ink)] border-b-2 border-[var(--ca-ink)] pb-1 hover:text-[var(--ca-green)] transition-colors">
                 Scale Ad Creative ➔
               </a>
@@ -844,7 +878,7 @@
           </div>
 
           <!-- Service 3: Visual World-Building -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-magenta)] text-white border border-[var(--ca-ink)] rounded-full">
@@ -855,25 +889,25 @@
               <h2 class="mt-4 text-2xl font-bold tracking-tight text-[var(--ca-ink)]">
                 Visual World-Building &amp; Launches
               </h2>
-              <p class="ca-hand mt-1 text-lg text-[var(--ca-ink)]/75 leading-tight">
+              <p class="ca-hand mt-1 text-lg text-ca-ink/75 leading-tight">
                 Tactile, impossible cinematic environments crafted with physical fidelity.
               </p>
-              <p class="mt-3 text-sm text-[var(--ca-ink)]/80 leading-relaxed">
+              <p class="mt-3 text-sm text-ca-ink/80 leading-relaxed">
                 Creating bespoke aesthetic worlds for products where physical shoots are cost-prohibitive or physically impossible. From liquid macro physics and botanical refractions to futuristic tech architecture with authentic material textures.
               </p>
 
-              <div class="mt-5 pt-4 border-t border-[var(--ca-ink)]/10">
-                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-[var(--ca-ink)]/60 mb-2">Deliverables:</p>
+              <div class="mt-5 pt-4 border-t border-ca-ink/10">
+                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-ca-ink/60 mb-2">Deliverables:</p>
                 <div class="flex flex-wrap gap-1.5">
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">World Visual Bible</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Macro Product Passes</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">3D/AI Hybrid Assets</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Campaign Key Art</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">World Visual Bible</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Macro Product Passes</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">3D/AI Hybrid Assets</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Campaign Key Art</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-[var(--ca-ink)]/10">
+            <div class="mt-6 pt-4 border-t border-ca-ink/10">
               <a href="#contact" class="ca-mono inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[var(--ca-ink)] border-b-2 border-[var(--ca-ink)] pb-1 hover:text-[var(--ca-magenta)] transition-colors">
                 Build a World ➔
               </a>
@@ -881,7 +915,7 @@
           </div>
 
           <!-- Service 4: Creative Direction & Treatments -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-blue)] text-white border border-[var(--ca-ink)] rounded-full">
@@ -892,25 +926,25 @@
               <h2 class="mt-4 text-2xl font-bold tracking-tight text-[var(--ca-ink)]">
                 Creative Direction &amp; Treatments
               </h2>
-              <p class="ca-hand mt-1 text-lg text-[var(--ca-ink)]/75 leading-tight">
+              <p class="ca-hand mt-1 text-lg text-ca-ink/75 leading-tight">
                 Visionary pitch bibles and mood films that win high-stakes client briefs.
               </p>
-              <p class="mt-3 text-sm text-[var(--ca-ink)]/80 leading-relaxed">
+              <p class="mt-3 text-sm text-ca-ink/80 leading-relaxed">
                 Senior creative leadership for agencies and production houses preparing commercial pitches. I provide visual treatments, AI-generated proof-of-concept mood films, cinematographic style guides, and prompt architecture bibles.
               </p>
 
-              <div class="mt-5 pt-4 border-t border-[var(--ca-ink)]/10">
-                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-[var(--ca-ink)]/60 mb-2">Deliverables:</p>
+              <div class="mt-5 pt-4 border-t border-ca-ink/10">
+                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-ca-ink/60 mb-2">Deliverables:</p>
                 <div class="flex flex-wrap gap-1.5">
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Director's Pitch Deck</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">60s AI Mood Film</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Camera Grammar Guide</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Presentation Assets</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Director's Pitch Deck</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">60s AI Mood Film</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Camera Grammar Guide</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Presentation Assets</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-[var(--ca-ink)]/10">
+            <div class="mt-6 pt-4 border-t border-ca-ink/10">
               <a href="#contact" class="ca-mono inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[var(--ca-ink)] border-b-2 border-[var(--ca-ink)] pb-1 hover:text-[var(--ca-blue)] transition-colors">
                 Request a Pitch Treatment ➔
               </a>
@@ -918,7 +952,7 @@
           </div>
 
           <!-- Service 5: Campaign Concepts -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-yellow)] text-[var(--ca-ink)] border border-[var(--ca-ink)] rounded-full">
@@ -929,25 +963,25 @@
               <h2 class="mt-4 text-2xl font-bold tracking-tight text-[var(--ca-ink)]">
                 Campaign Concepts &amp; Visual Strategy
               </h2>
-              <p class="ca-hand mt-1 text-lg text-[var(--ca-ink)]/75 leading-tight">
+              <p class="ca-hand mt-1 text-lg text-ca-ink/75 leading-tight">
                 Distinctive visual identities and motion languages that command attention.
               </p>
-              <p class="mt-3 text-sm text-[var(--ca-ink)]/80 leading-relaxed">
+              <p class="mt-3 text-sm text-ca-ink/80 leading-relaxed">
                 Developing the foundational visual concept and narrative hook for multi-platform campaigns. Ensuring every visual asset aligns with the brand's core truth while pushing aesthetic boundaries with modern generative tools.
               </p>
 
-              <div class="mt-5 pt-4 border-t border-[var(--ca-ink)]/10">
-                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-[var(--ca-ink)]/60 mb-2">Deliverables:</p>
+              <div class="mt-5 pt-4 border-t border-ca-ink/10">
+                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-ca-ink/60 mb-2">Deliverables:</p>
                 <div class="flex flex-wrap gap-1.5">
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Concept Document</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Keyframe Storyboards</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Motion Design System</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Rollout Blueprint</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Concept Document</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Keyframe Storyboards</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Motion Design System</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Rollout Blueprint</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-[var(--ca-ink)]/10">
+            <div class="mt-6 pt-4 border-t border-ca-ink/10">
               <a href="#contact" class="ca-mono inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[var(--ca-ink)] border-b-2 border-[var(--ca-ink)] pb-1 hover:text-[var(--ca-yellow)] transition-colors">
                 Develop a Concept ➔
               </a>
@@ -955,7 +989,7 @@
           </div>
 
           <!-- Service 6: Social-First Motion -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-green)] text-white border border-[var(--ca-ink)] rounded-full">
@@ -966,25 +1000,25 @@
               <h2 class="mt-4 text-2xl font-bold tracking-tight text-[var(--ca-ink)]">
                 Social-First Motion &amp; Culture Content
               </h2>
-              <p class="ca-hand mt-1 text-lg text-[var(--ca-ink)]/75 leading-tight">
+              <p class="ca-hand mt-1 text-lg text-ca-ink/75 leading-tight">
                 Thumb-stopping editorial motion designed specifically for vertical feeds.
               </p>
-              <p class="mt-3 text-sm text-[var(--ca-ink)]/80 leading-relaxed">
+              <p class="mt-3 text-sm text-ca-ink/80 leading-relaxed">
                 Cinematic vertical video assets engineered to arrest attention in the first second. Combining editorial pacing, sound design, and unexpected generative visuals that invite shares and high organic engagement.
               </p>
 
-              <div class="mt-5 pt-4 border-t border-[var(--ca-ink)]/10">
-                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-[var(--ca-ink)]/60 mb-2">Deliverables:</p>
+              <div class="mt-5 pt-4 border-t border-ca-ink/10">
+                <p class="ca-mono text-xs font-bold uppercase tracking-wider text-ca-ink/60 mb-2">Deliverables:</p>
                 <div class="flex flex-wrap gap-1.5">
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Vertical Video Suites (9:16)</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Micro-Narratives</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Native Trend Interprets</span>
-                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-[var(--ca-ink)]/20 rounded">Audio-Synced Cuts</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Vertical Video Suites (9:16)</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Micro-Narratives</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Native Trend Interprets</span>
+                  <span class="ca-mono text-[11px] font-medium px-2.5 py-1 bg-[var(--ca-surface)] border border-ca-ink/20 rounded">Audio-Synced Cuts</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-[var(--ca-ink)]/10">
+            <div class="mt-6 pt-4 border-t border-ca-ink/10">
               <a href="#contact" class="ca-mono inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[var(--ca-ink)] border-b-2 border-[var(--ca-ink)] pb-1 hover:text-[var(--ca-green)] transition-colors">
                 Create Motion Content ➔
               </a>
@@ -1028,56 +1062,56 @@
           <div class="rounded-3xl border-2 border-[var(--ca-ink)] bg-white p-6 sm:p-7 shadow-[4px_4px_0_var(--ca-ink)] flex flex-col justify-between">
             <div>
               <span class="ca-display text-4xl text-[var(--ca-yellow)] bg-[var(--ca-ink)] px-3 py-1 rounded-xl inline-block leading-none">01</span>
-              <p class="ca-hand mt-3 text-xl text-[var(--ca-ink)]/70 leading-none">Story First</p>
+              <p class="ca-hand mt-3 text-xl text-ca-ink/70 leading-none">Story First</p>
               <h2 class="mt-1 text-xl font-bold tracking-tight text-[var(--ca-ink)]">Concept &amp; Treatment</h2>
-              <p class="mt-3 text-xs sm:text-sm text-[var(--ca-ink)]/75 leading-relaxed">
+              <p class="mt-3 text-xs sm:text-sm text-ca-ink/75 leading-relaxed">
                 We clarify the brand objective, audience hook, and narrative arc. I develop a comprehensive director's treatment outlining tone, camera grammar (35mm anamorphic, depth of field, color palette), and keyframe storyboards before generating a single video frame.
               </p>
             </div>
-            <div class="mt-6 pt-3 border-t border-[var(--ca-ink)]/10">
-              <span class="ca-mono text-[11px] font-bold uppercase tracking-widest text-[var(--ca-ink)]/60">Milestone: Approved Treatment</span>
+            <div class="mt-6 pt-3 border-t border-ca-ink/10">
+              <span class="ca-mono text-[11px] font-bold uppercase tracking-widest text-ca-ink/60">Milestone: Approved Treatment</span>
             </div>
           </div>
 
           <div class="rounded-3xl border-2 border-[var(--ca-ink)] bg-white p-6 sm:p-7 shadow-[4px_4px_0_var(--ca-ink)] flex flex-col justify-between">
             <div>
               <span class="ca-display text-4xl text-[var(--ca-cyan)] bg-[var(--ca-ink)] px-3 py-1 rounded-xl inline-block leading-none">02</span>
-              <p class="ca-hand mt-3 text-xl text-[var(--ca-ink)]/70 leading-none">Zero Uncanny Glitches</p>
+              <p class="ca-hand mt-3 text-xl text-ca-ink/70 leading-none">Zero Uncanny Glitches</p>
               <h2 class="mt-1 text-xl font-bold tracking-tight text-[var(--ca-ink)]">Continuity &amp; Locks</h2>
-              <p class="mt-3 text-xs sm:text-sm text-[var(--ca-ink)]/75 leading-relaxed">
+              <p class="mt-3 text-xs sm:text-sm text-ca-ink/75 leading-relaxed">
                 I build locked character face-meshes, product geometry references, and lighting matrices. By establishing strict continuity locks across Midjourney, ComfyUI, and 3D reference passes, we eliminate visual morphing and maintain rock-solid brand fidelity.
               </p>
             </div>
-            <div class="mt-6 pt-3 border-t border-[var(--ca-ink)]/10">
-              <span class="ca-mono text-[11px] font-bold uppercase tracking-widest text-[var(--ca-ink)]/60">Milestone: Locked Model Mesh</span>
+            <div class="mt-6 pt-3 border-t border-ca-ink/10">
+              <span class="ca-mono text-[11px] font-bold uppercase tracking-widest text-ca-ink/60">Milestone: Locked Model Mesh</span>
             </div>
           </div>
 
           <div class="rounded-3xl border-2 border-[var(--ca-ink)] bg-white p-6 sm:p-7 shadow-[4px_4px_0_var(--ca-ink)] flex flex-col justify-between">
             <div>
               <span class="ca-display text-4xl text-[var(--ca-pink-soft)] bg-[var(--ca-ink)] px-3 py-1 rounded-xl inline-block leading-none">03</span>
-              <p class="ca-hand mt-3 text-xl text-[var(--ca-ink)]/70 leading-none">Directing the Motion</p>
+              <p class="ca-hand mt-3 text-xl text-ca-ink/70 leading-none">Directing the Motion</p>
               <h2 class="mt-1 text-xl font-bold tracking-tight text-[var(--ca-ink)]">Generative Passes</h2>
-              <p class="mt-3 text-xs sm:text-sm text-[var(--ca-ink)]/75 leading-relaxed">
+              <p class="mt-3 text-xs sm:text-sm text-ca-ink/75 leading-relaxed">
                 Directing camera movement, speed ramps, and character kinetics using Runway Gen-3, Kling AI, and bespoke optical flow systems. Every shot is directed with cinematic intent rather than random generation luck.
               </p>
             </div>
-            <div class="mt-6 pt-3 border-t border-[var(--ca-ink)]/10">
-              <span class="ca-mono text-[11px] font-bold uppercase tracking-widest text-[var(--ca-ink)]/60">Milestone: Selected Video Takes</span>
+            <div class="mt-6 pt-3 border-t border-ca-ink/10">
+              <span class="ca-mono text-[11px] font-bold uppercase tracking-widest text-ca-ink/60">Milestone: Selected Video Takes</span>
             </div>
           </div>
 
           <div class="rounded-3xl border-2 border-[var(--ca-ink)] bg-white p-6 sm:p-7 shadow-[4px_4px_0_var(--ca-ink)] flex flex-col justify-between">
             <div>
               <span class="ca-display text-4xl text-[var(--ca-green)] bg-[var(--ca-ink)] px-3 py-1 rounded-xl inline-block leading-none">04</span>
-              <p class="ca-hand mt-3 text-xl text-[var(--ca-ink)]/70 leading-none">The Film Comes Alive</p>
+              <p class="ca-hand mt-3 text-xl text-ca-ink/70 leading-none">The Film Comes Alive</p>
               <h2 class="mt-1 text-xl font-bold tracking-tight text-[var(--ca-ink)]">Editorial &amp; Sound</h2>
-              <p class="mt-3 text-xs sm:text-sm text-[var(--ca-ink)]/75 leading-relaxed">
+              <p class="mt-3 text-xs sm:text-sm text-ca-ink/75 leading-relaxed">
                 Raw generative passes are cut in Premiere Pro, color-graded in DaVinci Resolve, and layered with multi-track organic sound design, foley audio, and voiceover. The result is a tactile, broadcast-ready film delivered on schedule.
               </p>
             </div>
-            <div class="mt-6 pt-3 border-t border-[var(--ca-ink)]/10">
-              <span class="ca-mono text-[11px] font-bold uppercase tracking-widest text-[var(--ca-ink)]/60">Milestone: Broadcast Master</span>
+            <div class="mt-6 pt-3 border-t border-ca-ink/10">
+              <span class="ca-mono text-[11px] font-bold uppercase tracking-widest text-ca-ink/60">Milestone: Broadcast Master</span>
             </div>
           </div>
 
@@ -1136,7 +1170,7 @@
                   <span class="h-2.5 w-2.5 rounded-full bg-[var(--ca-ink)]"></span>
                   2026
                 </span>
-                <span class="ca-mono text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-[var(--ca-ink)]/10 text-[var(--ca-ink)]">
+                <span class="ca-mono text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-ca-ink/10 text-[var(--ca-ink)]">
                   Commercial Showcase
                 </span>
                 <span class="ca-mono text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-red-600 text-white flex items-center gap-1">
@@ -1148,7 +1182,7 @@
               <h2 class="mt-4 sm:mt-6 text-4xl font-semibold tracking-tight sm:text-6xl xl:text-7xl text-[var(--ca-ink)]">
                 Coffee Commercials
               </h2>
-              <p class="mt-4 sm:mt-5 max-w-lg text-base sm:text-lg leading-relaxed text-[var(--ca-ink)]/90">
+              <p class="mt-4 sm:mt-5 max-w-lg text-base sm:text-lg leading-relaxed text-ca-ink/90">
                 Cold coffee commercial film capturing slow-motion bean selection, bottle condensation, and rich brew textures from bean to bottle.
               </p>
               
@@ -1377,52 +1411,52 @@
     </section>
 
     <!-- INDUSTRY SECTORS & COLLABORATIONS SECTION -->
-    <section id="sectors" class="ca-section scroll-mt-24 py-16 sm:py-24 border-t border-[var(--ca-ink)]/10 bg-[var(--ca-surface)]">
+    <section id="sectors" class="ca-section scroll-mt-24 py-16 sm:py-24 border-t border-ca-ink/10 bg-[var(--ca-surface)]">
       <div class="ca-container">
         
         <div class="flex flex-col items-center text-center pb-8 sm:pb-12">
           <p class="ca-hand text-center text-3xl text-[var(--ca-ink)] sm:text-4xl" data-motion="reveal">commercial focus &amp; spec showcases</p>
-          <p class="mt-2 max-w-xl text-sm sm:text-base text-[var(--ca-ink)]/70 font-normal">
+          <p class="mt-2 max-w-xl text-sm sm:text-base text-ca-ink/70 font-normal">
             Directing AI visual concepts and generative film systems across key global industries.
           </p>
         </div>
         
         <!-- 6 Industry Sector Badges -->
         <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6" data-motion="reveal" data-delay="0.1">
-          <div class="relative flex h-18 items-center justify-center p-4 -rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 -rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Consumer Tech</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Skincare &amp; DTC</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 -rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 -rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Beverage &amp; FMCG</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Fashion &amp; Apparel</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 -rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 -rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Wellness &amp; MedSpa</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Entertainment</span>
           </div>
         </div>
 
         <!-- Ethical Disclosure & Production Standards Area -->
-        <div class="mt-12 mx-auto max-w-3xl rounded-2xl border-2 border-[var(--ca-ink)]/20 bg-white/70 p-6 sm:p-8 text-center shadow-sm" data-motion="reveal" data-delay="0.15">
-          <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-yellow)] text-[var(--ca-ink)] border border-[var(--ca-ink)]/30 rounded-full inline-block mb-3">
+        <div class="mt-12 mx-auto max-w-3xl rounded-2xl border-2 border-ca-ink/20 bg-white/70 p-6 sm:p-8 text-center shadow-sm" data-motion="reveal" data-delay="0.15">
+          <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-yellow)] text-[var(--ca-ink)] border border-ca-ink/30 rounded-full inline-block mb-3">
             Director Showcase &amp; Spec Production Standards
           </span>
-          <p class="text-xs sm:text-sm text-[var(--ca-ink)]/80 leading-relaxed max-w-2xl mx-auto">
+          <p class="text-xs sm:text-sm text-ca-ink/80 leading-relaxed max-w-2xl mx-auto">
             Featured case studies represent directorial commercial showcases, generative video pipeline research, and spec campaigns engineered to demonstrate broadcast-grade visual standards and rapid creative iteration.
           </p>
-          <div class="mt-4 pt-4 border-t border-[var(--ca-ink)]/10 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs font-mono text-[var(--ca-ink)]/70">
+          <div class="mt-4 pt-4 border-t border-ca-ink/10 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs font-mono text-ca-ink/70">
             <span class="inline-flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> Client References Available on Request</span>
             <span class="hidden sm:inline">·</span>
             <span class="inline-flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-[var(--ca-blue)]"></span> 4K Master / 35mm Broadcast Quality</span>
@@ -1465,7 +1499,7 @@
           </span>
         </div>
 
-        <p class="ca-hand mx-auto max-w-xl px-2 text-2xl leading-snug text-[var(--ca-ink)]/80 sm:text-3xl mt-4" data-motion="reveal">
+        <p class="ca-hand mx-auto max-w-xl px-2 text-2xl leading-snug text-ca-ink/80 sm:text-3xl mt-4" data-motion="reveal">
           Have an upcoming commercial, product launch, or generative campaign? Send your brief.
         </p>
       </div>
@@ -1478,7 +1512,7 @@
           <div class="relative z-20 mb-6 flex justify-center lg:absolute lg:-left-6 xl:-left-10 lg:-top-12 lg:mb-0 lg:block lg:w-72 xl:w-80" data-motion="drop-in" data-rotate="-2">
             <div class="relative w-full max-w-sm -rotate-2 rounded-2xl border-2 border-[var(--ca-ink)] bg-white/70 backdrop-blur-md p-4 pt-5 shadow-[4px_6px_0_var(--ca-ink)] transition-transform duration-300 hover:rotate-0 hover:bg-white/90">
               <span aria-hidden="true" class="ca-tape-strip -left-4 -top-2 z-10 h-5 w-16 -rotate-[38deg] bg-white/60 backdrop-blur-sm border border-black/10"></span>
-              <span aria-hidden="true" class="ca-tape-strip -right-4 -top-2 z-10 h-5 w-16 rotate-[38deg] bg-[var(--ca-yellow)]/60 backdrop-blur-sm border border-black/10"></span>
+              <span aria-hidden="true" class="ca-tape-strip -right-4 -top-2 z-10 h-5 w-16 rotate-[38deg] bg-ca-yellow/60 backdrop-blur-sm border border-black/10"></span>
               
               <div class="flex items-start gap-3">
                 <div class="relative shrink-0">
@@ -1492,10 +1526,10 @@
                     <p class="font-bold text-sm text-[var(--ca-ink)]">Md Abu Baten</p>
                     <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--ca-ink)] text-white font-bold">DIRECTOR</span>
                   </div>
-                  <p class="mt-1 text-xs leading-relaxed text-[var(--ca-ink)]/80">
+                  <p class="mt-1 text-xs leading-relaxed text-ca-ink/80">
                     Open to brand commercials, creative retainers, and executive generative video consulting worldwide.
                   </p>
-                  <span class="mt-2.5 inline-flex items-center gap-1.5 rounded-md border border-[var(--ca-ink)]/20 bg-white/80 px-2 py-0.5 text-[11px] font-bold text-[var(--ca-ink)]">
+                  <span class="mt-2.5 inline-flex items-center gap-1.5 rounded-md border border-ca-ink/20 bg-white/80 px-2 py-0.5 text-[11px] font-bold text-[var(--ca-ink)]">
                     <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     Replies within 24–48h
                   </span>
@@ -1531,7 +1565,7 @@
                 <span class="h-2 w-2 rounded-full bg-[var(--ca-green)]"></span>
                 Helpful details to include:
               </h2>
-              <ul class="space-y-2 text-xs sm:text-sm text-[var(--ca-ink)]/75">
+              <ul class="space-y-2 text-xs sm:text-sm text-ca-ink/75">
                 <li class="flex items-start gap-2">
                   <span class="text-[var(--ca-blue)] font-bold">1.</span>
                   <span><strong>Project Scope:</strong> Commercial spot, modular ad variations, or world-building.</span>
@@ -1557,7 +1591,7 @@
                   <span class="h-2 w-2 rounded-full bg-[var(--ca-blue)]"></span>
                   Direct Communication &amp; Calls:
                 </h2>
-                <p class="text-xs sm:text-sm text-[var(--ca-ink)]/75 leading-relaxed">
+                <p class="text-xs sm:text-sm text-ca-ink/75 leading-relaxed">
                   Prefer a direct email or scheduling a 15-min discovery conversation? Choose below:
                 </p>
                 <div class="mt-4 flex flex-wrap items-center gap-3">
@@ -1576,8 +1610,8 @@
                 </div>
               </div>
 
-              <div class="mt-4 pt-4 border-t border-[var(--ca-ink)]/10 flex items-center justify-between">
-                <span class="ca-mono text-[11px] font-bold uppercase text-[var(--ca-ink)]/60">Response Guarantee:</span>
+              <div class="mt-4 pt-4 border-t border-ca-ink/10 flex items-center justify-between">
+                <span class="ca-mono text-[11px] font-bold uppercase text-ca-ink/60">Response Guarantee:</span>
                 <span class="ca-mono text-[11px] font-bold text-[var(--ca-green)]">Within 24–48 Business Hours</span>
               </div>
             </div>
@@ -1585,15 +1619,15 @@
           </div>
 
           <!-- Modern Project Brief Form -->
-          <div id="brief-form-wrapper" class="mt-8 rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-6 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)]">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-[var(--ca-ink)]/10 pb-4 mb-6">
+          <div id="brief-form-wrapper" class="mt-8 rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-6 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)]">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-ca-ink/10 pb-4 mb-6">
               <div>
                 <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[var(--ca-yellow)] border border-[var(--ca-ink)] text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ca-ink)] mb-1">
                   ⚡ Quick Brief Submission
                 </div>
                 <h3 class="ca-display text-2xl sm:text-3xl text-[var(--ca-ink)]">Send a Project Inquiry</h3>
               </div>
-              <span class="ca-mono text-xs text-[var(--ca-ink)]/60">Direct to baten@optiobyte.com</span>
+              <span class="ca-mono text-xs text-ca-ink/60">Direct to baten@optiobyte.com</span>
             </div>
 
             <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-5">
@@ -1611,7 +1645,7 @@
                     name="name" 
                     required 
                     placeholder="e.g. Sarah Jenkins (Brand Lead)" 
-                    class="w-full rounded-xl border-2 border-[var(--ca-ink)] bg-[var(--ca-surface)] px-4 py-3 text-sm text-[var(--ca-ink)] placeholder-[var(--ca-ink)]/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ca-yellow)]"
+                    class="w-full rounded-xl border-2 border-[var(--ca-ink)] bg-[var(--ca-surface)] px-4 py-3 text-sm text-[var(--ca-ink)] placeholder-ca-ink/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ca-yellow)]"
                   />
                 </div>
                 <div>
@@ -1624,7 +1658,7 @@
                     name="email" 
                     required 
                     placeholder="sarah@brand.com" 
-                    class="w-full rounded-xl border-2 border-[var(--ca-ink)] bg-[var(--ca-surface)] px-4 py-3 text-sm text-[var(--ca-ink)] placeholder-[var(--ca-ink)]/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ca-yellow)]"
+                    class="w-full rounded-xl border-2 border-[var(--ca-ink)] bg-[var(--ca-surface)] px-4 py-3 text-sm text-[var(--ca-ink)] placeholder-ca-ink/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ca-yellow)]"
                   />
                 </div>
               </div>
@@ -1662,13 +1696,13 @@
                   rows="3" 
                   required 
                   placeholder="Tell me about your campaign concept, intended timeline, target platforms (16:9, 9:16), or references..." 
-                  class="w-full rounded-xl border-2 border-[var(--ca-ink)] bg-[var(--ca-surface)] p-4 text-sm text-[var(--ca-ink)] placeholder-[var(--ca-ink)]/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ca-yellow)] resize-none"
+                  class="w-full rounded-xl border-2 border-[var(--ca-ink)] bg-[var(--ca-surface)] p-4 text-sm text-[var(--ca-ink)] placeholder-ca-ink/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ca-yellow)] resize-none"
                 ></textarea>
               </div>
 
               <!-- Submit Button & Feedback Status -->
               <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-                <p class="text-xs text-[var(--ca-ink)]/60 order-2 sm:order-1 text-center sm:text-left">
+                <p class="text-xs text-ca-ink/60 order-2 sm:order-1 text-center sm:text-left">
                   🔒 100% confidential. No spam, guaranteed fast directorial response.
                 </p>
                 <button 
@@ -1694,8 +1728,8 @@
   </main>
 
   <!-- CASE STUDY MODAL DIALOG -->
-  <div id="caseModal" role="dialog" aria-modal="true" class="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border-3 border-[var(--ca-ink)] bg-[var(--ca-surface)] p-6 sm:p-10 shadow-2xl">
+  <div id="caseModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" inert class="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border-[3px] border-[var(--ca-ink)] bg-[var(--ca-surface)] p-6 sm:p-10 shadow-2xl">
       <button onclick="closeModal()" aria-label="Close Case Study Dialog" class="absolute right-6 top-6 flex h-10 w-10 items-center justify-center rounded-full border-2 border-[var(--ca-ink)] bg-white text-[var(--ca-ink)] hover:bg-[var(--ca-yellow)] transition-colors font-bold active:scale-95">
         ✕
       </button>
@@ -1704,15 +1738,15 @@
   </div>
 
   <!-- FOOTER -->
-  <footer class="ca-section pb-10 pt-8 border-t border-[var(--ca-ink)]/10">
+  <footer class="ca-section pb-10 pt-8 border-t border-ca-ink/10">
     <div class="ca-container">
       <div class="flex flex-col justify-between gap-8 md:flex-row md:items-end">
         <div class="flex items-center gap-4 sm:gap-5">
           <!-- Footer Logo Portrait -->
           <div class="shrink-0">
-            <span class="flex h-16 w-16 sm:h-20 sm:w-20 lg:h-28 lg:w-28 items-center justify-center rounded-full overflow-hidden border-[3px] border-[var(--ca-ink)]/20 shadow-[0_6px_18px_rgba(25,21,16,0.14)] bg-transparent">
+            <span class="flex h-16 w-16 sm:h-20 sm:w-20 lg:h-28 lg:w-28 items-center justify-center rounded-full overflow-hidden border-[3px] border-ca-ink/20 shadow-[0_6px_18px_rgba(25,21,16,0.14)] bg-transparent">
               <img
-                src="./src/assets/baten/baten-logo.png"
+                src="./src/assets/baten/baten-logo-256.webp"
                 width="112"
                 height="112"
                 alt="Md Abu Baten illustrated portrait"
@@ -1732,7 +1766,7 @@
               <span class="h-2.5 w-2.5 rounded-full bg-[var(--ca-blue)] animate-pulse"></span>
               AI Creative Director &amp; Generative Video Specialist
             </p>
-            <p class="text-xs text-[var(--ca-ink)]/60 mt-1 font-mono">
+            <p class="text-xs text-ca-ink/60 mt-1 font-mono">
               Dhaka, Bangladesh · Directing Worldwide
             </p>
           </div>
@@ -1780,7 +1814,7 @@
         </div>
       </div>
 
-      <div class="mt-12 flex flex-col items-center justify-between gap-3 text-sm text-[var(--ca-ink)]/70 sm:flex-row">
+      <div class="mt-12 flex flex-col items-center justify-between gap-3 text-sm text-ca-ink/70 sm:flex-row">
         <span>© 2026 Md Abu Baten · All Rights Reserved</span>
         <a href="#hero" class="ca-mono inline-flex items-center gap-1.5 rounded-full bg-[var(--ca-chrome)] px-3.5 py-2 font-bold uppercase tracking-wide text-[var(--ca-ink)] transition-opacity hover:opacity-80">
           ▲ Back to Top
@@ -1793,6 +1827,46 @@
   <script type="module">
     import { portfolioData } from './src/data/portfolioData.js';
     import { MotionEngine } from './src/components/MotionEngine.js';
+
+    // ─── THE REEL: load the 3D scene only as it approaches the viewport ───
+    (function setupReel() {
+      const section = document.getElementById('reel');
+      const stage = section?.querySelector('[data-reel-stage]');
+      if (!section || !stage) return;
+
+      const hasWebGL = (() => {
+        try {
+          const c = document.createElement('canvas');
+          return !!(c.getContext('webgl2') || c.getContext('webgl'));
+        } catch { return false; }
+      })();
+      if (!hasWebGL) return; // the static strip stays visible
+
+      const loadOnApproach = new IntersectionObserver(async (entries, observer) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        observer.disconnect();
+        try {
+          const { mountReel } = await import('./src/components/reel3d.bundle.js');
+          const small = window.matchMedia('(max-width: 767px)').matches;
+          const reel = mountReel({
+            section,
+            stage,
+            canvasHost: stage.querySelector('[data-reel-canvas]'),
+            reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+            atlasUrl: small ? './src/assets/reel/reel-atlas-sm.webp' : './src/assets/reel/reel-atlas.webp',
+            hud: {
+              timecode: stage.querySelector('[data-reel-timecode]'),
+              film: stage.querySelector('[data-reel-film]'),
+              progress: stage.querySelector('[data-reel-progress]'),
+            },
+          });
+          if (reel) stage.classList.add('is-3d');
+        } catch (err) {
+          console.warn('The Reel: 3D scene unavailable, showing static strip.', err);
+        }
+      }, { rootMargin: '800px 0px' });
+      loadOnApproach.observe(section);
+    })();
 
     window.addEventListener('DOMContentLoaded', () => {
       new MotionEngine();
@@ -1836,7 +1910,12 @@
         });
       }
 
-      if (splash && b1 && b2) {
+      const skipSplash = document.documentElement.classList.contains('no-splash');
+      if (splash && skipSplash) {
+        splash.remove();
+        triggerBatenAnim();
+        triggerStickerAnim();
+      } else if (splash && b1 && b2) {
         b1.classList.add('splash-bubble-enter');
         animateChars(b1, 60, 45);
 
@@ -1879,10 +1958,16 @@
         if (!batenEl) return;
         const letters = batenEl.textContent.trim().split('');
         batenEl.innerHTML = '';
-        batenEl.style.visibility = 'visible';
+        batenEl.classList.add('is-revealed');
+        // Letters are split for animation; give screen readers the whole word once.
+        const srText = document.createElement('span');
+        srText.className = 'sr-only';
+        srText.textContent = letters.join('');
+        batenEl.appendChild(srText);
         letters.forEach((ch, i) => {
           const wrap = document.createElement('span');
           wrap.className = 'baten-char-wrap';
+          wrap.setAttribute('aria-hidden', 'true');
           const inner = document.createElement('span');
           inner.className = 'baten-char';
           inner.textContent = ch;
@@ -1918,7 +2003,7 @@
                 <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(project.youtubeId)}?autoplay=1&rel=0&modestbranding=1" title="${project.name} Commercial Film" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
               </div>
               <div class="flex items-center justify-between w-full max-w-[380px] px-1 text-xs ca-mono">
-                <span class="inline-flex items-center gap-1.5 text-[var(--ca-ink)]/70 font-bold">
+                <span class="inline-flex items-center gap-1.5 text-ca-ink/70 font-bold">
                   <span class="inline-block w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
                   YouTube Shorts · 9:16 Vertical Reel
                 </span>
@@ -1936,7 +2021,7 @@
                 <iframe class="w-full h-full aspect-video" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(project.youtubeId)}?autoplay=1&rel=0&modestbranding=1" title="${project.name} Commercial Film" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
               </div>
               <div class="flex items-center justify-between px-1 text-xs ca-mono">
-                <span class="inline-flex items-center gap-1.5 text-[var(--ca-ink)]/70 font-bold">
+                <span class="inline-flex items-center gap-1.5 text-ca-ink/70 font-bold">
                   <span class="inline-block w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
                   YouTube 4K Master · 16:9 Landscape Cut
                 </span>
@@ -1980,24 +2065,24 @@
           </div>
 
           <div>
-            <h2 class="ca-display text-4xl sm:text-6xl text-[var(--ca-ink)]">${project.name}</h2>
-            <p class="ca-hand text-2xl text-[var(--ca-ink)]/80 leading-relaxed mt-1">${project.tagline}</p>
+            <h2 id="modalTitle" class="ca-display text-4xl sm:text-6xl text-[var(--ca-ink)]">${project.name}</h2>
+            <p class="ca-hand text-2xl text-ca-ink/80 leading-relaxed mt-1">${project.tagline}</p>
           </div>
           
           ${videoPlayerMarkup}
 
           <!-- Project Meta Details Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-[var(--ca-chrome)]/30 p-4 sm:p-5 rounded-2xl border-2 border-[var(--ca-ink)]/15">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-ca-chrome/30 p-4 sm:p-5 rounded-2xl border-2 border-ca-ink/15">
             <div>
-              <p class="ca-mono text-[11px] font-bold uppercase text-[var(--ca-ink)]/60">My Role</p>
+              <p class="ca-mono text-[11px] font-bold uppercase text-ca-ink/60">My Role</p>
               <p class="text-xs sm:text-sm font-semibold text-[var(--ca-ink)] mt-0.5">${project.role}</p>
             </div>
             <div>
-              <p class="ca-mono text-[11px] font-bold uppercase text-[var(--ca-ink)]/60">AI &amp; Post Tools</p>
+              <p class="ca-mono text-[11px] font-bold uppercase text-ca-ink/60">AI &amp; Post Tools</p>
               <p class="text-xs sm:text-sm font-semibold text-[var(--ca-ink)] mt-0.5">${project.aiTools}</p>
             </div>
             <div>
-              <p class="ca-mono text-[11px] font-bold uppercase text-[var(--ca-ink)]/60">Fidelity / Sound</p>
+              <p class="ca-mono text-[11px] font-bold uppercase text-ca-ink/60">Fidelity / Sound</p>
               <p class="text-xs sm:text-sm font-semibold text-[var(--ca-ink)] mt-0.5">${project.metrics ? project.metrics[0].value + ' · ' + project.metrics[1].value : '4K Master'}</p>
             </div>
           </div>
@@ -2006,22 +2091,22 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="rounded-2xl bg-white p-6 border-2 border-[var(--ca-ink)] shadow-[4px_4px_0_var(--ca-ink)]">
               <h3 class="ca-mono text-base font-bold text-[var(--ca-ink)] uppercase mb-2">The Challenge</h3>
-              <p class="text-sm text-[var(--ca-ink)]/75 leading-relaxed">${project.challenge}</p>
+              <p class="text-sm text-ca-ink/75 leading-relaxed">${project.challenge}</p>
             </div>
             <div class="rounded-2xl bg-white p-6 border-2 border-[var(--ca-ink)] shadow-[4px_4px_0_var(--ca-ink)]">
               <h3 class="ca-mono text-base font-bold text-[var(--ca-ink)] uppercase mb-2">The Creative Idea</h3>
-              <p class="text-sm text-[var(--ca-ink)]/75 leading-relaxed">${project.creativeIdea || project.approach || ''}</p>
+              <p class="text-sm text-ca-ink/75 leading-relaxed">${project.creativeIdea || project.approach || ''}</p>
             </div>
           </div>
 
           <!-- Generative Pipeline & Directorial Execution -->
           <div class="rounded-2xl bg-white p-6 border-2 border-[var(--ca-ink)] shadow-[4px_4px_0_var(--ca-ink)]">
             <h3 class="ca-mono text-base font-bold text-[var(--ca-ink)] uppercase mb-2">Directorial Execution &amp; Pipeline</h3>
-            <p class="text-sm text-[var(--ca-ink)]/75 leading-relaxed">${project.directionExecution || project.approach || ''}</p>
+            <p class="text-sm text-ca-ink/75 leading-relaxed">${project.directionExecution || project.approach || ''}</p>
             ${project.generativePipeline ? `
-              <div class="mt-3 pt-3 border-t border-[var(--ca-ink)]/10">
+              <div class="mt-3 pt-3 border-t border-ca-ink/10">
                 <p class="ca-mono text-xs font-bold uppercase text-[var(--ca-blue)] mb-1">Pipeline Workflow:</p>
-                <p class="text-xs text-[var(--ca-ink)]/70 font-mono">${project.generativePipeline}</p>
+                <p class="text-xs text-ca-ink/70 font-mono">${project.generativePipeline}</p>
               </div>
             ` : ''}
           </div>
@@ -2030,14 +2115,14 @@
           <div class="rounded-2xl p-6 border-2 border-[var(--ca-ink)] shadow-[4px_4px_0_var(--ca-ink)] bg-[var(--ca-yellow-soft)]">
             <div class="flex items-center justify-between">
               <h3 class="ca-mono text-base font-bold text-[var(--ca-ink)] uppercase">Outcome &amp; Deliverables</h3>
-              <span class="ca-mono text-xs font-bold text-[var(--ca-ink)]/60">Broadcast Standard</span>
+              <span class="ca-mono text-xs font-bold text-ca-ink/60">Broadcast Standard</span>
             </div>
             <p class="text-sm text-[var(--ca-ink)] leading-relaxed mt-2">${project.outcome || project.results || ''}</p>
           </div>
 
           <!-- Direct CTA in Modal -->
-          <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[var(--ca-ink)]/10">
-            <span class="ca-mono text-xs text-[var(--ca-ink)]/60">Ready to build a similar cinematic commercial?</span>
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-ca-ink/10">
+            <span class="ca-mono text-xs text-ca-ink/60">Ready to build a similar cinematic commercial?</span>
             <a href="mailto:baten@optiobyte.com?subject=Inquiry:%20Project%20similar%20to%20${encodeURIComponent(project.name)}" class="btn-primary">
               Discuss a Commercial Film
             </a>
@@ -2046,13 +2131,27 @@
       `;
 
       const modal = document.getElementById('caseModal');
+      lastFocusBeforeModal = document.activeElement;
+      modal.removeAttribute('inert');
       modal.classList.remove('opacity-0', 'pointer-events-none');
       modal.classList.add('opacity-100', 'pointer-events-auto');
       document.body.style.overflow = 'hidden';
+      // Keep keyboard and screen-reader users inside the dialog while it is open.
+      document.querySelectorAll('body > header, #main-content, body > footer').forEach((el) => el.setAttribute('inert', ''));
+      modal.querySelector('button[aria-label^="Close"]')?.focus();
     };
+
+    let lastFocusBeforeModal = null;
+    const isModalOpen = () => !document.getElementById('caseModal')?.hasAttribute('inert');
 
     window.closeModal = () => {
       const modal = document.getElementById('caseModal');
+      if (!modal || !isModalOpen()) return;
+      modal.setAttribute('inert', '');
+      document.querySelectorAll('body > header, #main-content, body > footer').forEach((el) => el.removeAttribute('inert'));
+      if (lastFocusBeforeModal && typeof lastFocusBeforeModal.focus === 'function') {
+        lastFocusBeforeModal.focus();
+      }
       modal.classList.remove('opacity-100', 'pointer-events-auto');
       modal.classList.add('opacity-0', 'pointer-events-none');
       document.body.style.overflow = '';
@@ -2104,10 +2203,13 @@
       const submitBtn = document.getElementById('submitBriefBtn');
       const statusBox = document.getElementById('formStatusMessage');
 
-      const name = form.name.value.trim();
-      const email = form.email.value.trim();
-      const projectType = form.project_type.value || 'Commercial Spot';
-      const message = form.message.value.trim();
+      // form.elements avoids clashes with built-in form properties (form.name is the form's own name attribute)
+      const fields = form.elements;
+      const name = fields.namedItem('name').value.trim();
+      const email = fields.namedItem('email').value.trim();
+      const projectType = fields.namedItem('project_type').value || 'Commercial Spot';
+      const message = fields.namedItem('message').value.trim();
+      const honey = fields.namedItem('_honey')?.value || '';
 
       if (!name || !email || !message) {
         statusBox.className = 'mt-4 rounded-xl border-2 border-rose-500 bg-rose-50 p-4 text-xs font-bold text-rose-800';
@@ -2126,7 +2228,7 @@
       }
 
       // Honeypot check — bots fill hidden fields, humans don\'t
-      if (form._honey?.value) return;
+      if (honey) return;
 
       // Loading state
       const originalBtnHtml = submitBtn.innerHTML;
@@ -2154,12 +2256,17 @@
             project_type: projectType,
             message: message,
             _template: 'table',
-            _captcha: 'true',
-            _honey: form._honey?.value || ''
+            _honey: honey
           })
         });
 
-        const data = await response.json();
+        // FormSubmit answers HTTP 200 even when it rejects a submission (e.g. the inbox
+        // has not been activated yet), so the body's `success` flag must be checked too.
+        // Otherwise visitors see "received" while the brief is silently dropped.
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || String(data.success) !== 'true') {
+          throw new Error(data.message || `FormSubmit returned HTTP ${response.status}`);
+        }
 
         // Show success state
         statusBox.className = 'mt-4 rounded-xl border-2 border-[var(--ca-ink)] bg-emerald-50 p-4 text-xs font-medium text-emerald-950 shadow-[3px_3px_0_var(--ca-ink)]';
@@ -2184,8 +2291,8 @@
           <div class="flex items-start gap-2.5">
             <span class="text-base">✉️</span>
             <div>
-              <p class="font-bold text-sm">Direct Transmission Ready</p>
-              <p class="mt-0.5">Click below to send via your email client to <strong>baten@optiobyte.com</strong>:</p>
+              <p class="font-bold text-sm">The form couldn't send automatically</p>
+              <p class="mt-0.5">Your brief is ready below. Send it with your email client to <strong>baten@optiobyte.com</strong>:</p>
               <a href="${mailtoUrl}" class="inline-block mt-2 font-bold underline text-[var(--ca-blue)]">Open Email &amp; Send Brief →</a>
             </div>
           </div>

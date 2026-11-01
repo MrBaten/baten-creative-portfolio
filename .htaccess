@@ -17,10 +17,15 @@ RewriteRule ^(.*)$ https://optiobyte.com/$1 [L,R=301]
 ErrorDocument 404 /404.html
 
 # 4. Block Sensitive Files and Hidden Directories
-<FilesMatch "(^\.env|^\.git|^\.DS_Store|package\.json|package-lock\.json|\.log$)">
+<FilesMatch "(^\.env|^\.git|^\.DS_Store|package\.json|package-lock\.json|\.log$|^tailwind\.config\.cjs$|^README\.md$)">
   Order allow,deny
   Deny from all
 </FilesMatch>
+
+# FilesMatch only sees file *names*, so files inside these folders
+# (e.g. /.git/config, /.github/workflows/deploy.yml) were still public.
+# Hide the folders themselves: repo metadata, CI config, build tooling and 3D source.
+RedirectMatch 404 ^/(\.git|\.github|scripts|node_modules|src/3d)(/|$)
 
 # 5. Production HTTP Security Headers
 <IfModule mod_headers.c>
@@ -40,7 +45,7 @@ ErrorDocument 404 /404.html
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
   # Content-Security-Policy tailored for optiobyte.com
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://i.ytimg.com https://images.unsplash.com https://optiobyte.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://formsubmit.co; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co; upgrade-insecure-requests"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://i.ytimg.com https://images.unsplash.com https://optiobyte.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://formsubmit.co; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co; upgrade-insecure-requests"
 </IfModule>
 
 # 6. Enable Gzip / Deflate Compression
