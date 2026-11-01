@@ -44,13 +44,14 @@ function render(c) {
       <a class="button" href="#work">${ICON_PLAY}${esc(hero.primaryAction)}</a>
       <a class="button button--ghost" href="#contact">${esc(hero.secondaryAction)}</a>
     </div>
-    <p class="hero-where">${esc(p.location)}. ${esc(p.reach)}.</p>`;
+    <p class="hero-where">${esc(p.location)}. ${esc(p.reach)}.</p>
+    <p class="gen-status" aria-hidden="true" hidden data-gen-status><span class="gen-dot"></span><span data-gen-label></span></p>`;
   $('.scene--hero').insertAdjacentHTML('beforeend', '<a class="scroll-cue" href="#about">Scroll to enter the studio<span aria-hidden="true"></span></a>');
 
   const portrait = about.photos[0];
   $('[data-slot="about"]').innerHTML = `
     <div class="about-head">
-      ${portrait ? `<img class="about-portrait" src="${esc(portrait.src)}" alt="${esc(portrait.alt)}" width="96" height="128" loading="lazy" decoding="async" />` : ''}
+      ${portrait ? `<img class="about-portrait" src="${esc(portrait.src)}" alt="${esc(portrait.alt)}" width="96" height="128" decoding="async" />` : ''}
       <h2 class="scene-title" id="about-title">${esc(about.title)}</h2>
     </div>
     <div class="about-body">${about.body.map((t) => `<p>${esc(t)}</p>`).join('')}</div>
@@ -314,14 +315,22 @@ function loadStudio(content, scroll) {
 
   const start = async () => {
     try {
-      const { mountStudio } = await import('./world.bundle.js?v=5');
+      const { mountStudio } = await import('./world.bundle.js?v=6');
       mountStudio({
         canvas,
         progress: () => scroll.get(),
         sceneCount: scroll.count,
         works: slowNet ? content.works.map((w) => ({ ...w, loop: '' })) : content.works,
         photos: content.about.photos,
-        engraving: content.hero.lensEngraving,
+        word: content.hero.openingWord,
+        onPhase: (label) => {
+          const st = content.hero.openingStatus || {};
+          const box = $('[data-gen-status]');
+          const text = label === 'noise' ? `${st.noise}…` : label === 'name' ? `${st.name}: ${content.profile.name}` : `${st.film}: ${label}`;
+          $('[data-gen-label]').textContent = text;
+          box.hidden = false;
+          box.classList.remove('is-tick'); void box.offsetWidth; box.classList.add('is-tick');
+        },
         name: content.profile.name,
         reducedMotion: reduceMotion,
         onReady: () => stage.classList.add('is-live'),

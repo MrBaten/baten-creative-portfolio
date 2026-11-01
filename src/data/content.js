@@ -54,8 +54,14 @@ export const content = {
       "Senior creative direction meets generative video pipelines: broadcast-grade commercial films, tactile ad worlds and visual campaigns, made with cinematic taste and fast execution.",
     primaryAction: "Watch the films",
     secondaryAction: "Start a project",
-    // Text engraved on the 3D lens (keep it short)
-    lensEngraving: "BATEN CINE 35mm  f/1.4",
+    // The word the opening particles form (short, capitals work best)
+    openingWord: "BATEN",
+    // Small live caption under the hero while the particles change
+    openingStatus: {
+      noise: "Denoising",
+      name: "Resolving",
+      film: "Now rendering",
+    },
   },
 
   /* ── ABOUT ───────────────────────────────────────────────────── */
@@ -101,7 +107,7 @@ export const content = {
       year: "2026",
       youtubeId: "zmp8BQxVO6E",
       vertical: true,
-      poster: "./src/media/coffee-poster.webp",
+      poster: "./src/media/coffee-poster-2.webp",
       loop: "./src/media/coffee-loop.mp4",
       role: "Creative direction, prompt architecture, generative motion, sound design",
       tools: "Runway Gen-3, Kling AI, Midjourney v6, DaVinci Resolve, Premiere Pro",
@@ -145,7 +151,7 @@ export const content = {
       year: "2026",
       youtubeId: "aBxnXEPCx9I",
       vertical: false,
-      poster: "./src/media/zingora-poster.webp",
+      poster: "./src/media/zingora-poster-2.webp",
       loop: "./src/media/zingora-loop.mp4",
       role: "Creative direction, treatment, particle physics, colour pipeline",
       tools: "Midjourney v6, Runway Gen-3, Kling AI, DaVinci Resolve, Premiere Pro",

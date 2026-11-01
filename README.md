@@ -1,8 +1,10 @@
 # Md Abu Baten · AI Creative Director — optiobyte.com
 
-Personal site of **Md Abu Baten**: a 3D film studio you scroll through ("The Light Stage").
-You start in front of a cinema lens, fly through its iris, and move through the studio: portraits,
-monitors playing the commercials, a lighting rig, a dolly track and a clapperboard.
+Personal site of **Md Abu Baten**: a neon night film studio in 3D that you scroll through.
+It opens with ~30,000 glowing particles that turn from noise into the name "BATEN" and then into
+frames from the commercials (the way generative video turns noise into film). Scrolling blows the
+particles past the camera into the studio: portraits, monitors playing the films, a neon lighting
+rig, a dolly track and a clapperboard. Palette: midnight indigo, electric cyan, solar orange, laser lime.
 
 - Live: https://optiobyte.com
 - Repo: https://github.com/MrBaten/baten-creative-portfolio
@@ -21,7 +23,7 @@ monitors playing the commercials, a lighting rig, a dolly track and a clapperboa
 | To change… | Edit in `content.js` |
 | :--- | :--- |
 | Name, role, email, booking link, social links | `profile` |
-| Headline, intro, lens engraving | `hero` |
+| Headline, intro, opening word and caption | `hero` |
 | About text, photos, principles | `about` |
 | Films (title, YouTube ID, text, case study) | `works` |
 | Services and deliverables | `services` |
@@ -31,6 +33,8 @@ monitors playing the commercials, a lighting rig, a dolly track and a clapperboa
 
 **Adding a new film**
 1. Put a portrait poster image (about 720 × 1280, `.webp` or `.jpg`) in `src/media/`.
+   The opening particles redraw the first three posters, so pick a clear, simple frame
+   (one product, strong light) rather than a busy one.
 2. Optional: a short silent loop for the studio monitors (5–8 s, `.mp4`, under ~1 MB) in `src/media/`.
 3. Copy one `{ … }` block in `works`, paste it after the last one, and fill it in
    (`youtubeId` is the code after `shorts/` or `watch?v=` in the YouTube link).
