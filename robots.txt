@@ -7,6 +7,4 @@ Disallow: /api/
 Disallow: /*?*preview=*
 Disallow: /*?*draft=*
 
-# Host & XML Sitemap Reference
-Host: https://optiobyte.com
 Sitemap: https://optiobyte.com/sitemap.xml

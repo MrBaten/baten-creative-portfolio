@@ -32,7 +32,8 @@
   <meta property="og:description" content="Directing cinematic AI films, broadcast-ready AI commercials, and generative video campaigns for ambitious brands worldwide." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://optiobyte.com/" />
-  <meta property="og:image" content="https://optiobyte.com/src/assets/baten/baten-standing.jpg" />
+  <meta property="og:image" content="https://optiobyte.com/src/assets/baten/og-card.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Md Abu Baten - AI Creative Director &amp; Generative Video Specialist" />
@@ -41,7 +42,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Md Abu Baten · AI Creative Director &amp; Generative Video Specialist" />
   <meta name="twitter:description" content="Cinematic AI commercials, brand films, and generative video direction for ambitious global brands." />
-  <meta name="twitter:image" content="https://optiobyte.com/src/assets/baten/baten-standing.jpg" />
+  <meta name="twitter:image" content="https://optiobyte.com/src/assets/baten/og-card.jpg" />
   <meta name="twitter:image:alt" content="Md Abu Baten - AI Creative Director &amp; Generative Video Specialist" />
 
   <!-- JSON-LD Structured Data Schema Graph -->
@@ -213,6 +214,22 @@
   <!-- Tailwind CSS CDN (swap for self-hosted build before production) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Boot flags: runs before first paint. `js` lets CSS hide things only when scripts can reveal them;
+       `no-splash` skips the intro for reduced-motion users and for repeat views in the same session. -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      try {
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce || sessionStorage.getItem('ob-splash-seen')) root.classList.add('no-splash');
+        sessionStorage.setItem('ob-splash-seen', '1');
+      } catch (e) { /* storage blocked: just play the intro */ }
+      // Fail-safe: whatever happens to the main script, never leave the page hidden.
+      setTimeout(function () { root.classList.add('ob-failsafe'); }, 7000);
+    })();
+  </script>
+
   <!-- Security Utility: HTML Sanitizer (prevents DOM XSS via innerHTML injection) -->
   <script>
     /**
@@ -285,7 +302,7 @@
       <div class="flex items-stretch gap-3 sm:gap-4">
         <a aria-label="Md Abu Baten Portfolio Home" class="flex items-center pr-2 transition-transform active:scale-95" href="#">
           <span class="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden border-2 border-[var(--ca-ink)]/30 shadow-md hover:scale-105 transition-transform bg-[var(--ca-orange)]/10">
-            <img src="./src/assets/baten/baten-avatar.png" width="44" height="44" alt="Md Abu Baten" class="h-full w-full object-cover" />
+            <img src="./src/assets/baten/baten-avatar-128.webp" width="44" height="44" alt="Md Abu Baten" class="h-full w-full object-cover" />
           </span>
         </a>
 
@@ -460,7 +477,7 @@
           <div class="relative mt-4 sm:mt-6" data-motion="pop" data-delay="0.15">
             <!-- Doodle Box Container -->
             <div class="ca-doodle-box relative inline-block border-[3px] border-[var(--ca-orange)] px-6 py-2 sm:px-12 sm:py-3 lg:px-16 lg:py-4 bg-transparent cursor-crosshair">
-              <span class="ca-signature-baten text-[24vw] leading-[0.95] tracking-tight text-[var(--ca-ink)] sm:text-9xl lg:text-[12.5rem]" data-baten-anim style="visibility:hidden">
+              <span class="ca-signature-baten text-[24vw] leading-[0.95] tracking-tight text-[var(--ca-ink)] sm:text-9xl lg:text-[12.5rem]" data-baten-anim>
                 BATEN
               </span>
             </div>
@@ -770,7 +787,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" data-motion="reveal" data-delay="0.2">
           
           <!-- Service 1: AI Commercials -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-yellow)] text-[var(--ca-ink)] border border-[var(--ca-ink)] rounded-full">
@@ -807,7 +824,7 @@
           </div>
 
           <!-- Service 2: Generative Video Systems -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-green)] text-white border border-[var(--ca-ink)] rounded-full">
@@ -844,7 +861,7 @@
           </div>
 
           <!-- Service 3: Visual World-Building -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-magenta)] text-white border border-[var(--ca-ink)] rounded-full">
@@ -881,7 +898,7 @@
           </div>
 
           <!-- Service 4: Creative Direction & Treatments -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-blue)] text-white border border-[var(--ca-ink)] rounded-full">
@@ -918,7 +935,7 @@
           </div>
 
           <!-- Service 5: Campaign Concepts -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-yellow)] text-[var(--ca-ink)] border border-[var(--ca-ink)] rounded-full">
@@ -955,7 +972,7 @@
           </div>
 
           <!-- Service 6: Social-First Motion -->
-          <div class="flex flex-col justify-between rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
+          <div class="flex flex-col justify-between rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-7 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)] transition-transform duration-200 hover:-translate-y-1">
             <div>
               <div class="flex items-center justify-between gap-2">
                 <span class="ca-mono text-xs font-bold uppercase tracking-widest px-3 py-1 bg-[var(--ca-green)] text-white border border-[var(--ca-ink)] rounded-full">
@@ -1389,27 +1406,27 @@
         
         <!-- 6 Industry Sector Badges -->
         <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6" data-motion="reveal" data-delay="0.1">
-          <div class="relative flex h-18 items-center justify-center p-4 -rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 -rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Consumer Tech</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Skincare &amp; DTC</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 -rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 -rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Beverage &amp; FMCG</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Fashion &amp; Apparel</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 -rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 -rotate-2 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Wellness &amp; MedSpa</span>
           </div>
 
-          <div class="relative flex h-18 items-center justify-center p-4 rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
+          <div class="relative flex h-[4.5rem] items-center justify-center p-4 rotate-1 hover:rotate-0 transition-transform bg-white border-2 border-[var(--ca-ink)] shadow-[3px_3px_0_var(--ca-ink)] text-center">
             <span class="relative z-10 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ca-ink)]">Entertainment</span>
           </div>
         </div>
@@ -1585,7 +1602,7 @@
           </div>
 
           <!-- Modern Project Brief Form -->
-          <div id="brief-form-wrapper" class="mt-8 rounded-3xl border-3 border-[var(--ca-ink)] bg-white p-6 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)]">
+          <div id="brief-form-wrapper" class="mt-8 rounded-3xl border-[3px] border-[var(--ca-ink)] bg-white p-6 sm:p-8 shadow-[6px_6px_0_var(--ca-ink)]">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-[var(--ca-ink)]/10 pb-4 mb-6">
               <div>
                 <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[var(--ca-yellow)] border border-[var(--ca-ink)] text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ca-ink)] mb-1">
@@ -1694,8 +1711,8 @@
   </main>
 
   <!-- CASE STUDY MODAL DIALOG -->
-  <div id="caseModal" role="dialog" aria-modal="true" class="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border-3 border-[var(--ca-ink)] bg-[var(--ca-surface)] p-6 sm:p-10 shadow-2xl">
+  <div id="caseModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" inert class="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border-[3px] border-[var(--ca-ink)] bg-[var(--ca-surface)] p-6 sm:p-10 shadow-2xl">
       <button onclick="closeModal()" aria-label="Close Case Study Dialog" class="absolute right-6 top-6 flex h-10 w-10 items-center justify-center rounded-full border-2 border-[var(--ca-ink)] bg-white text-[var(--ca-ink)] hover:bg-[var(--ca-yellow)] transition-colors font-bold active:scale-95">
         ✕
       </button>
@@ -1712,7 +1729,7 @@
           <div class="shrink-0">
             <span class="flex h-16 w-16 sm:h-20 sm:w-20 lg:h-28 lg:w-28 items-center justify-center rounded-full overflow-hidden border-[3px] border-[var(--ca-ink)]/20 shadow-[0_6px_18px_rgba(25,21,16,0.14)] bg-transparent">
               <img
-                src="./src/assets/baten/baten-logo.png"
+                src="./src/assets/baten/baten-logo-256.webp"
                 width="112"
                 height="112"
                 alt="Md Abu Baten illustrated portrait"
@@ -1836,7 +1853,12 @@
         });
       }
 
-      if (splash && b1 && b2) {
+      const skipSplash = document.documentElement.classList.contains('no-splash');
+      if (splash && skipSplash) {
+        splash.remove();
+        triggerBatenAnim();
+        triggerStickerAnim();
+      } else if (splash && b1 && b2) {
         b1.classList.add('splash-bubble-enter');
         animateChars(b1, 60, 45);
 
@@ -1879,10 +1901,16 @@
         if (!batenEl) return;
         const letters = batenEl.textContent.trim().split('');
         batenEl.innerHTML = '';
-        batenEl.style.visibility = 'visible';
+        batenEl.classList.add('is-revealed');
+        // Letters are split for animation; give screen readers the whole word once.
+        const srText = document.createElement('span');
+        srText.className = 'sr-only';
+        srText.textContent = letters.join('');
+        batenEl.appendChild(srText);
         letters.forEach((ch, i) => {
           const wrap = document.createElement('span');
           wrap.className = 'baten-char-wrap';
+          wrap.setAttribute('aria-hidden', 'true');
           const inner = document.createElement('span');
           inner.className = 'baten-char';
           inner.textContent = ch;
@@ -1980,7 +2008,7 @@
           </div>
 
           <div>
-            <h2 class="ca-display text-4xl sm:text-6xl text-[var(--ca-ink)]">${project.name}</h2>
+            <h2 id="modalTitle" class="ca-display text-4xl sm:text-6xl text-[var(--ca-ink)]">${project.name}</h2>
             <p class="ca-hand text-2xl text-[var(--ca-ink)]/80 leading-relaxed mt-1">${project.tagline}</p>
           </div>
           
@@ -2046,13 +2074,27 @@
       `;
 
       const modal = document.getElementById('caseModal');
+      lastFocusBeforeModal = document.activeElement;
+      modal.removeAttribute('inert');
       modal.classList.remove('opacity-0', 'pointer-events-none');
       modal.classList.add('opacity-100', 'pointer-events-auto');
       document.body.style.overflow = 'hidden';
+      // Keep keyboard and screen-reader users inside the dialog while it is open.
+      document.querySelectorAll('body > header, #main-content, body > footer').forEach((el) => el.setAttribute('inert', ''));
+      modal.querySelector('button[aria-label^="Close"]')?.focus();
     };
+
+    let lastFocusBeforeModal = null;
+    const isModalOpen = () => !document.getElementById('caseModal')?.hasAttribute('inert');
 
     window.closeModal = () => {
       const modal = document.getElementById('caseModal');
+      if (!modal || !isModalOpen()) return;
+      modal.setAttribute('inert', '');
+      document.querySelectorAll('body > header, #main-content, body > footer').forEach((el) => el.removeAttribute('inert'));
+      if (lastFocusBeforeModal && typeof lastFocusBeforeModal.focus === 'function') {
+        lastFocusBeforeModal.focus();
+      }
       modal.classList.remove('opacity-100', 'pointer-events-auto');
       modal.classList.add('opacity-0', 'pointer-events-none');
       document.body.style.overflow = '';
@@ -2104,10 +2146,13 @@
       const submitBtn = document.getElementById('submitBriefBtn');
       const statusBox = document.getElementById('formStatusMessage');
 
-      const name = form.name.value.trim();
-      const email = form.email.value.trim();
-      const projectType = form.project_type.value || 'Commercial Spot';
-      const message = form.message.value.trim();
+      // form.elements avoids clashes with built-in form properties (form.name is the form's own name attribute)
+      const fields = form.elements;
+      const name = fields.namedItem('name').value.trim();
+      const email = fields.namedItem('email').value.trim();
+      const projectType = fields.namedItem('project_type').value || 'Commercial Spot';
+      const message = fields.namedItem('message').value.trim();
+      const honey = fields.namedItem('_honey')?.value || '';
 
       if (!name || !email || !message) {
         statusBox.className = 'mt-4 rounded-xl border-2 border-rose-500 bg-rose-50 p-4 text-xs font-bold text-rose-800';
@@ -2126,7 +2171,7 @@
       }
 
       // Honeypot check — bots fill hidden fields, humans don\'t
-      if (form._honey?.value) return;
+      if (honey) return;
 
       // Loading state
       const originalBtnHtml = submitBtn.innerHTML;
@@ -2154,12 +2199,17 @@
             project_type: projectType,
             message: message,
             _template: 'table',
-            _captcha: 'true',
-            _honey: form._honey?.value || ''
+            _honey: honey
           })
         });
 
-        const data = await response.json();
+        // FormSubmit answers HTTP 200 even when it rejects a submission (e.g. the inbox
+        // has not been activated yet), so the body's `success` flag must be checked too.
+        // Otherwise visitors see "received" while the brief is silently dropped.
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || String(data.success) !== 'true') {
+          throw new Error(data.message || `FormSubmit returned HTTP ${response.status}`);
+        }
 
         // Show success state
         statusBox.className = 'mt-4 rounded-xl border-2 border-[var(--ca-ink)] bg-emerald-50 p-4 text-xs font-medium text-emerald-950 shadow-[3px_3px_0_var(--ca-ink)]';
@@ -2184,8 +2234,8 @@
           <div class="flex items-start gap-2.5">
             <span class="text-base">✉️</span>
             <div>
-              <p class="font-bold text-sm">Direct Transmission Ready</p>
-              <p class="mt-0.5">Click below to send via your email client to <strong>baten@optiobyte.com</strong>:</p>
+              <p class="font-bold text-sm">The form couldn't send automatically</p>
+              <p class="mt-0.5">Your brief is ready below. Send it with your email client to <strong>baten@optiobyte.com</strong>:</p>
               <a href="${mailtoUrl}" class="inline-block mt-2 font-bold underline text-[var(--ca-blue)]">Open Email &amp; Send Brief →</a>
             </div>
           </div>

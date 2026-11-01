@@ -216,10 +216,16 @@ export class MotionEngine {
     textEls.forEach((el) => {
       const text = el.textContent.trim();
       el.innerHTML = '';
-      el.setAttribute('aria-label', text);
+
+      // Screen readers get the whole word once; the per-letter spans are visual only.
+      const srText = document.createElement('span');
+      srText.className = 'sr-only';
+      srText.textContent = text;
+      el.appendChild(srText);
 
       [...text].forEach((char, idx) => {
         const span = document.createElement('span');
+        span.setAttribute('aria-hidden', 'true');
         span.textContent = char === ' ' ? '\u00A0' : char;
         span.style.display = 'inline-block';
         span.style.transition = `transform 0.4s cubic-bezier(0.22, 1, 0.36, 1) ${idx * 0.025}s, opacity 0.4s ease ${idx * 0.025}s`;

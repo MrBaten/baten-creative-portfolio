@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Handjet:ELGR,ELSH,wght@1..2,0..16,100..900&family=Inter:wght@300;400;500;600;700&family=Just+Me+Again+Down+Here&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@700;800&display=swap');
+/* Fonts are loaded by the <link> tags in index.html / 404.html.
+   (A second @import here made the browser download the same font CSS twice,
+   and @import inside a stylesheet blocks rendering until it resolves.) */
 
 :root {
   /* ==========================================================================
@@ -571,6 +573,37 @@ textarea:focus-visible {
 
 .splash-bubble-exit {
   animation: bubble-exit 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* ============================================================
+   SPLASH & REVEAL FAIL-SAFES
+   The intro is driven by the module script. If that never runs
+   (blocked, offline, an error), the boot script in <head> adds
+   .ob-failsafe after 7s and everything below becomes visible.
+   With JS disabled entirely, :not(.js) shows content immediately.
+   ============================================================ */
+html:not(.js) #splash,
+html.no-splash #splash,
+html.ob-failsafe #splash {
+  display: none;
+}
+
+html.js [data-baten-anim]:not(.is-revealed) {
+  visibility: hidden;
+}
+
+html.ob-failsafe [data-baten-anim] {
+  visibility: visible;
+}
+
+html:not(.js) .sticker-slide-up {
+  opacity: 1;
+  transform: rotate(var(--sticker-rot, 0deg));
+  animation: none;
+}
+
+html.ob-failsafe .sticker-slide-up {
+  animation-play-state: running;
 }
 
 /* ============================================================
