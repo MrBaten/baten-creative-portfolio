@@ -665,6 +665,258 @@ html.ob-failsafe .sticker-slide-up {
 .sticker-mob-l { --sticker-rot: -5.4deg; }
 .sticker-mob-r { --sticker-rot: 3.6deg; }
 
+/* ==========================================================================
+   THE REEL — scroll-pinned 3D film strip (see src/3d/reel.js)
+   The section is tall; .reel-stage sticks to the viewport while you
+   scroll through it, and scroll progress drives the camera.
+   ========================================================================== */
+.reel-section {
+  --reel-bg: #120f0b;
+  --reel-paper: #f4efe6;
+  position: relative;
+  height: 300vh;
+  background: var(--reel-bg);
+  color: var(--reel-paper);
+  z-index: 3;
+}
+
+/* Film-leader perforations where the paper page meets the dark stage */
+.reel-section::before,
+.reel-section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18px;
+  z-index: 4;
+  background:
+    radial-gradient(ellipse 7px 5px at 50% 50%, var(--ca-surface) 98%, transparent 100%) 0 50% / 34px 18px repeat-x,
+    var(--reel-bg);
+  pointer-events: none;
+}
+.reel-section::before { top: 0; }
+.reel-section::after { bottom: 0; }
+
+.reel-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@media (pointer: fine) {
+  .reel-stage.is-3d { cursor: grab; }
+  .reel-stage.is-3d.is-dragging { cursor: grabbing; }
+}
+
+.reel-canvas-host,
+.reel-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.reel-canvas {
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-artsy);
+}
+.reel-stage.is-3d .reel-canvas { opacity: 1; }
+
+/* Static fallback: a tilted strip of the same stills */
+.reel-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.8s ease;
+}
+.reel-stage.is-3d .reel-fallback { opacity: 0; visibility: hidden; transition: opacity 0.8s ease, visibility 0s 0.8s; }
+
+.reel-fallback-strip {
+  display: flex;
+  gap: 10px;
+  padding: 26px 10px;
+  transform: rotate(-8deg) scale(1.15);
+  background:
+    radial-gradient(ellipse 5px 4px at 50% 50%, var(--reel-bg) 98%, transparent 100%) 0 6px / 22px 14px repeat-x,
+    radial-gradient(ellipse 5px 4px at 50% 50%, var(--reel-bg) 98%, transparent 100%) 0 calc(100% - 6px) / 22px 14px repeat-x,
+    #050403;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.reel-fallback-strip span {
+  flex: none;
+  width: clamp(90px, 13vw, 170px);
+  aspect-ratio: 2 / 3;
+  border-radius: 6px;
+  background-image: url("../assets/reel/reel-atlas-sm.webp");
+  background-size: 600% 200%;
+}
+
+.reel-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 85% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.72) 100%),
+    radial-gradient(ellipse 68% 80% at 0% 100%, rgba(18, 15, 11, 0.94) 0%, rgba(18, 15, 11, 0.62) 48%, transparent 78%),
+    linear-gradient(to top, rgba(18, 15, 11, 0.85) 0%, transparent 34%);
+  z-index: 1;
+}
+
+.reel-grain {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+  animation: reel-grain 0.9s steps(6) infinite;
+}
+@keyframes reel-grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-6%, -2%); }
+  80% { transform: translate(5%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Viewfinder HUD */
+.reel-hud {
+  position: absolute;
+  left: clamp(20px, 4vw, 56px);
+  right: clamp(20px, 4vw, 56px);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.5vw, 32px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.78);
+  pointer-events: none;
+}
+.reel-hud--top { top: 92px; }
+.reel-hud--bottom { bottom: 34px; }
+.reel-hud strong { color: var(--ca-yellow); font-weight: 500; margin-left: 0.6em; }
+.reel-hud-meta { margin-left: auto; }
+
+.reel-rec { display: inline-flex; align-items: center; gap: 8px; color: #fff; }
+.reel-rec-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff3b30;
+  box-shadow: 0 0 12px #ff3b30;
+  animation: reel-rec 1.2s steps(2, jump-none) infinite;
+}
+@keyframes reel-rec { 50% { opacity: 0.15; } }
+
+.reel-hint { margin-left: auto; opacity: 0.7; }
+.reel-progress {
+  position: relative;
+  width: clamp(80px, 18vw, 220px);
+  height: 2px;
+  background: rgba(244, 239, 230, 0.2);
+}
+.reel-progress > span {
+  position: absolute;
+  inset: 0;
+  background: var(--ca-yellow);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.reel-corner {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 2px solid rgba(244, 239, 230, 0.55);
+  z-index: 3;
+  pointer-events: none;
+}
+.reel-corner--tl { top: 76px; left: 14px; border-right: 0; border-bottom: 0; }
+.reel-corner--tr { top: 76px; right: 14px; border-left: 0; border-bottom: 0; }
+.reel-corner--bl { bottom: 22px; left: 14px; border-right: 0; border-top: 0; }
+.reel-corner--br { bottom: 22px; right: 14px; border-left: 0; border-top: 0; }
+
+/* Copy block */
+.reel-copy {
+  position: absolute;
+  z-index: 3;
+  left: clamp(20px, 5vw, 80px);
+  bottom: clamp(80px, 12vh, 132px);
+  max-width: min(520px, calc(100% - 40px));
+}
+.reel-tape {
+  display: inline-block;
+  padding: 4px 16px;
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  color: var(--ca-ink);
+  background: var(--ca-yellow);
+  transform: rotate(-4deg);
+  box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.35);
+}
+.reel-title {
+  margin: 10px 0 0;
+  font-size: clamp(4.2rem, 13vw, 11rem);
+  line-height: 0.85;
+  color: var(--ca-surface);
+  text-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+}
+.reel-lede {
+  margin-top: 14px;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  line-height: 1.55;
+  color: rgba(244, 239, 230, 0.82);
+  max-width: 440px;
+}
+.reel-cta {
+  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--ca-ink);
+  background: var(--ca-yellow);
+  border: 2px solid var(--ca-surface);
+  box-shadow: 4px 4px 0 var(--ca-surface);
+  text-decoration: none;
+  transition: transform 0.2s var(--ease-artsy), box-shadow 0.2s var(--ease-artsy);
+}
+.reel-cta:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ca-surface); }
+.reel-cta:focus-visible { outline-color: var(--ca-yellow); }
+
+@media (max-width: 767px) {
+  .reel-section { height: 240vh; }
+  .reel-hud--top { top: 80px; }
+  .reel-hud-meta, .reel-hint { display: none; }
+  .reel-hud--bottom { bottom: 26px; justify-content: space-between; }
+  .reel-copy { bottom: 74px; }
+  .reel-corner--tl, .reel-corner--tr { top: 66px; }
+}
+
+@media (pointer: coarse) {
+  .reel-hint { display: none; }
+}
+
+/* Reduced motion: no pinning, no scroll-driven camera — one still shot. */
+@media (prefers-reduced-motion: reduce) {
+  .reel-section { height: auto; }
+  .reel-grain, .reel-rec-dot { animation: none; }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
