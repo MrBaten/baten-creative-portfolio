@@ -68,10 +68,13 @@ export class MotionEngine {
   setupIntersectionObservers() {
     if (this.prefersReducedMotion) return;
 
+    // threshold 0: reveal as soon as any part is on screen. A ratio threshold
+    // (previously 0.1) needs 10% of the element visible, which for a ~4000px
+    // stack of cards on a phone means scrolling deep into blank space first.
     const observerOptions = {
       root: null,
       rootMargin: '0px 0px -8% 0px',
-      threshold: 0.1,
+      threshold: 0,
     };
 
     const inViewObserver = new IntersectionObserver((entries, observer) => {
