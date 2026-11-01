@@ -1,83 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full antialiased scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>404 · Page Not Found | Md Abu Baten — AI Creative Director</title>
+  <title>Page not found · Md Abu Baten</title>
   <meta name="robots" content="noindex, follow" />
-  <meta name="description" content="The page you are looking for does not exist or has been moved. Explore cinematic AI films and generative video direction by Md Abu Baten." />
-  
-  <!-- Favicon & Touch Icons (with cache-busting ?v=2) -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
-  <link rel="manifest" href="/site.webmanifest?v=2" />
-  <meta name="theme-color" content="#fdfdfb" />
-  
-  <!-- Preconnect Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Handjet:wght@700&family=Inter:wght@400;600&family=Just+Me+Again+Down+Here&display=swap" rel="stylesheet" />
-
-  <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="/src/styles/main.css?v=3" />
-  <link rel="stylesheet" href="/src/styles/tailwind.css?v=3" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Schibsted+Grotesk:wght@400;600&display=swap" />
+  <link rel="stylesheet" href="/src/styles/site.css?v=5" />
 </head>
-<body class="min-h-full flex flex-col justify-between bg-[var(--ca-surface)] text-[var(--ca-ink)] antialiased selection:bg-[var(--ca-yellow)] selection:text-[var(--ca-ink)] p-6 sm:p-12">
-  
-  <!-- Grain Texture Overlay -->
-  <div aria-hidden="true" class="ca-grain pointer-events-none fixed inset-0 z-[2] mix-blend-multiply"></div>
-
-  <!-- Header -->
-  <header class="relative z-10 flex items-center justify-between">
-    <a href="/" class="group inline-flex items-center gap-3 font-bold tracking-tight text-[var(--ca-ink)]">
-      <span class="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden border-2 border-ca-ink/30 shadow-md bg-ca-orange/10">
-        <img src="/src/assets/baten/baten-avatar-128.webp" width="44" height="44" alt="Md Abu Baten" class="h-full w-full object-cover" />
-      </span>
-      <span class="ca-mono text-sm uppercase tracking-widest">Md Abu Baten</span>
-    </a>
-    <a href="/" class="ca-mono text-xs font-bold uppercase tracking-widest underline decoration-2 underline-offset-4 hover:text-[var(--ca-blue)]">
-      Back to Home →
+<body>
+  <div class="stage" aria-hidden="true"><div class="stage-fallback"></div></div>
+  <header class="site-header">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/src/assets/baten/baten-avatar-128.webp" width="36" height="36" alt="" />
+      <span class="brand-name">Md Abu Baten</span>
     </a>
   </header>
-
-  <!-- 404 Main Content -->
-  <main class="relative z-10 my-auto flex flex-col items-center text-center py-16">
-    <div class="relative inline-block">
-      <span aria-hidden="true" class="ca-tape-strip -left-6 -top-3 z-10 h-6 w-24 -rotate-[12deg] bg-ca-yellow-soft/80"></span>
-      <span aria-hidden="true" class="ca-tape-strip -right-6 -top-3 z-10 h-6 w-24 rotate-[12deg] bg-ca-pink-soft/80"></span>
-      
-      <div class="ca-doodle-box border-[3px] border-[var(--ca-ink)] bg-[var(--ca-yellow)] px-8 py-6 sm:px-16 sm:py-10 shadow-[8px_8px_0_var(--ca-ink)]">
-        <p class="ca-hand text-3xl sm:text-4xl text-[var(--ca-ink)] mb-2">scene not found</p>
-        <h1 class="ca-display text-8xl sm:text-9xl md:text-[11rem] leading-none text-[var(--ca-ink)] tracking-tight">
-          404
-        </h1>
+  <main id="main">
+    <section class="scene">
+      <div class="panel">
+        <p class="hero-role">Take 404</p>
+        <h1 class="scene-title">This scene didn't make the cut</h1>
+        <p class="scene-lede">The page you opened doesn't exist or has moved. The films and everything else are on the home page.</p>
+        <div class="hero-actions">
+          <a class="button" href="/#work">Watch the films</a>
+          <a class="button button--ghost" href="/">Go to the home page</a>
+        </div>
       </div>
-    </div>
-
-    <p class="mt-8 max-w-md text-base sm:text-lg text-ca-ink/80 leading-relaxed">
-      This cut didn't make the final edit. The URL might have changed, or this scene hasn't been generated yet.
-    </p>
-
-    <!-- Navigation Hub -->
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-      <a href="/" class="inline-flex items-center justify-center rounded-xl border-2 border-[var(--ca-ink)] bg-[var(--ca-ink)] px-6 py-3 text-sm font-bold text-white shadow-[4px_4px_0_var(--ca-yellow)] transition-transform hover:-translate-y-0.5 active:translate-y-0">
-        Return to Portfolio
-      </a>
-      <a href="/#work" class="inline-flex items-center justify-center rounded-xl border-2 border-[var(--ca-ink)] bg-white px-6 py-3 text-sm font-bold text-[var(--ca-ink)] shadow-[4px_4px_0_var(--ca-ink)] transition-transform hover:-translate-y-0.5 active:translate-y-0">
-        Explore Selected Work
-      </a>
-      <a href="/#contact" class="inline-flex items-center justify-center rounded-xl border-2 border-[var(--ca-ink)] bg-[var(--ca-mint)] px-6 py-3 text-sm font-bold text-[var(--ca-ink)] shadow-[4px_4px_0_var(--ca-ink)] transition-transform hover:-translate-y-0.5 active:translate-y-0">
-        Send a Brief
-      </a>
-    </div>
+    </section>
   </main>
-
-  <!-- Footer -->
-  <footer class="relative z-10 text-center ca-mono text-xs text-ca-ink/60">
-    © 2026 Md Abu Baten · AI Creative Director &amp; Generative Video Specialist · Dhaka, Bangladesh
-  </footer>
-
 </body>
 </html>
