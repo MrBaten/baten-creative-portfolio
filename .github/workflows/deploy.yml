@@ -1,9 +1,7 @@
-name: Deploy to Hostinger
+name: Deploy to Hostinger (legacy, manual only)
 
+# The site now deploys on Vercel. This old FTP deploy only runs if started by hand.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
