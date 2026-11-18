@@ -1,50 +1,56 @@
 /**
- * NEON NIGHT STUDIO — the 3D world behind optiobyte.com
+ * DAYLIGHT STUDIO — the 3D world behind the Md Abu Baten portfolio
  * ------------------------------------------------------------------
- * Opening ("noise to film"): ~30,000 glowing particles start as pure
- * noise, resolve into the name, then into frames from the commercials,
- * cycling — the way generative video turns noise into film. The pointer
- * pushes particles away. Scrolling blows the particles past the camera
- * and flies into a dark studio lit by neon: framed portraits (About),
- * monitors playing the films (Work), a neon lighting rig over a product
- * (Services), a dolly track with four glowing tape marks (Process) and a
+ * Opening ("noise to film"): ~30,000 ink dots start as pure noise,
+ * resolve into the name, then into frames from the commercials, cycling —
+ * the way generative video turns noise into film. The pointer pushes the
+ * dots away. Scrolling blows them past the camera and flies into a bright
+ * white photo studio (an infinity cove with soft shadows): gallery prints
+ * (About), monitors playing the films (Work), a softbox rig over a product
+ * (Services), a dolly track with four gaffer-tape marks (Process) and a
  * clapperboard (Contact).
  *
- * Palette: midnight indigo, electric cyan, solar orange, laser lime.
+ * Palette: a warm "teal & orange" film grade — paper, cream and warm ink;
+ * ember is the one accent, deep teal the cool counterweight; ochre and slate
+ * join them only on the four process marks.
  *
  * Source file. The browser loads src/app/world.bundle.js — rebuild with
  * `npm run build:3d` after editing.
  */
 import {
-  WebGLRenderer, WebGLRenderTarget, HalfFloatType, Scene, Color, Fog, PerspectiveCamera, ACESFilmicToneMapping,
+  WebGLRenderer, WebGLRenderTarget, HalfFloatType, Scene, Color, Fog, PerspectiveCamera, NoToneMapping, PCFShadowMap,
   SRGBColorSpace, PMREMGenerator, HemisphereLight, DirectionalLight, Group, Mesh, Points, BufferGeometry,
   BufferAttribute, PlaneGeometry, BoxGeometry, CylinderGeometry, TorusGeometry, SphereGeometry, CircleGeometry,
   MeshStandardMaterial, MeshPhysicalMaterial, MeshBasicMaterial, ShaderMaterial, CanvasTexture, TextureLoader,
-  VideoTexture, Vector2, Vector3, Plane, Raycaster, CatmullRomCurve3, MathUtils, AdditiveBlending, BackSide,
+  VideoTexture, Vector2, Vector3, Plane, Raycaster, CatmullRomCurve3, MathUtils, BackSide,
   GridHelper,
 } from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
 /* ── Palette ──────────────────────────────────────────────────────── */
-const SKY_TOP = '#07051a';
-const HORIZON = '#22135a';
-const FOG = '#22135a';                         // = horizon, so distant props dissolve into it
-const FLOOR = '#0c0926';
-const CYAN = '#22e4ff';
-const ORANGE = '#ff8a00';
-const LIME = '#c6ff3d';
-const VIOLET = '#8b5cff';
-const ICE = '#f4f2ff';
-const TAPE = [CYAN, ORANGE, LIME, VIOLET];   // one glowing tape mark per process step (matches the page)
+const SKY_TOP = '#f8f6f2';
+const HORIZON = '#f2eee8';
+const FOG = '#f2eee8';                         // = horizon, so the floor curves into the backdrop like an infinity cove
+const FLOOR = '#f0ebe3';
+const INK = '#1c1a17';
+const ACCENT = '#c2410c';                      // ember: the one accent (same as the page)
+const CORAL = '#e8622c';                       // a brighter ember for small lit details
+const MINT = '#0f766e';                        // deep teal: the cool counterweight
+const AMBER = '#a16207';                       // ochre
+const SLATE = '#3f4b5b';
+const WHITE = '#ffffff';
+const METAL = '#ddd7cd';                       // warm brushed aluminium
+// White props get a whisper of self-light so they read as white, not grey, in the soft light.
+const whiteMat = (color = '#ffffff', roughness = 0.55) => new MeshStandardMaterial({ color, roughness, metalness: 0, emissive: '#fff7ee', emissiveIntensity: 0.22 });
+const TAPE = [ACCENT, MINT, AMBER, SLATE];   // one gaffer-tape mark per process step (matches the page)
 
 const smooth = (a, b, x) => { const t = MathUtils.clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
 const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
-const DISPLAY = '"Big Shoulders Display", "Arial Narrow", Impact, sans-serif';
-const BODY = '"Schibsted Grotesk", Arial, sans-serif';
+const DISPLAY = '"Inter Tight", "Helvetica Neue", Arial, sans-serif';
+const BODY = '"Inter", "Helvetica Neue", Arial, sans-serif';
 
 /* ── Small factories ──────────────────────────────────────────────── */
 function canvasTexture(w, h, draw, anisotropy = 4) {
@@ -57,8 +63,8 @@ function canvasTexture(w, h, draw, anisotropy = 4) {
   return t;
 }
 
-// Neon: colour pushed above 1.0 so the bloom pass makes it glow.
-const neon = (hex, k = 3) => new MeshBasicMaterial({ color: new Color(hex).multiplyScalar(k) });
+// Accent paint: a clean satin colour (the old neon glow is gone).
+const neon = (hex) => new MeshStandardMaterial({ color: hex, roughness: 0.42, metalness: 0.05 });
 
 let radialTex;
 const radial = () => (radialTex ||= canvasTexture(128, 128, (g, W, H) => {
@@ -69,10 +75,10 @@ const radial = () => (radialTex ||= canvasTexture(128, 128, (g, W, H) => {
   g.fillStyle = r; g.fillRect(0, 0, W, H);
 }));
 
-// A pool of coloured light on the glossy floor under a neon object.
+// A soft contact shadow on the floor under an object (grounds it in the bright studio).
 function glowPool(hex, w, d, opacity = 0.5) {
   const m = new Mesh(new PlaneGeometry(w, d), new MeshBasicMaterial({
-    color: hex, alphaMap: radial(), transparent: true, opacity, depthWrite: false, blending: AdditiveBlending,
+    color: '#3a352c', alphaMap: radial(), transparent: true, opacity: opacity * 0.3, depthWrite: false,
   }));
   m.rotation.x = -Math.PI / 2;
   m.position.y = 0.006;
@@ -146,7 +152,7 @@ const particleFragment = /* glsl */ `
   varying float vAlpha;
   void main() {
     float d = length(gl_PointCoord - 0.5);
-    float a = smoothstep(0.5, 0.08, d) * vAlpha;
+    float a = smoothstep(0.5, 0.28, d) * vAlpha;
     if (a < 0.01) discard;
     gl_FragColor = vec4(vColor * uGain, a);
   }
@@ -159,7 +165,7 @@ function shuffled(n) {
   return a;
 }
 
-const PAL = [CYAN, CYAN, CYAN, ORANGE, ORANGE, LIME, VIOLET, VIOLET].map((h) => new Color(h));
+const PAL = [INK, INK, INK, ACCENT, ACCENT, ACCENT, MINT, AMBER].map((h) => new Color(h));
 
 function noiseTarget(N) {
   const pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
@@ -168,7 +174,7 @@ function noiseTarget(N) {
     pos[i * 3 + 1] = (Math.random() - 0.5) * 8.5;
     pos[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1;
     const c = PAL[(Math.random() * PAL.length) | 0];
-    const k = 0.22 + Math.random() * 0.5;
+    const k = 0.75 + Math.random() * 0.25;
     col[i * 3] = c.r * k; col[i * 3 + 1] = c.g * k; col[i * 3 + 2] = c.b * k;
   }
   return { pos, col };
@@ -188,7 +194,7 @@ function wordTarget(N, word, width) {
   const pts = [];
   for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) if (data[(y * W + x) * 4 + 3] > 128) pts.push(x, y);
   const pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
-  const cyan = new Color(CYAN), orange = new Color(ORANGE), lime = new Color(LIME), ice = new Color(ICE);
+  const ink = new Color(INK), accent = new Color(ACCENT), teal = new Color(MINT);
   const scale = width / W;
   for (let i = 0; i < N; i++) {
     const k = ((Math.random() * pts.length) / 2 | 0) * 2;
@@ -196,10 +202,10 @@ function wordTarget(N, word, width) {
     pos[i * 3] = (px - W / 2) * scale;
     pos[i * 3 + 1] = (H / 2 - py) * scale;
     pos[i * 3 + 2] = (Math.random() - 0.5) * 0.2;
-    // Dithered gradient: cyan on the left, solar orange gathering to the right, lime sparks.
+    // Dithered gradient: ink on the left, ember gathering to the right, a few teal sparks.
     const t = px / W;
     const r = Math.random();
-    const c2 = r < 0.04 ? lime : r < 0.08 ? ice : Math.random() < t * t * 0.95 ? orange : cyan;
+    const c2 = r < 0.035 ? teal : Math.random() < t * t * 0.95 ? accent : ink;
     col[i * 3] = c2.r; col[i * 3 + 1] = c2.g; col[i * 3 + 2] = c2.b;
   }
   return { pos, col };
@@ -227,10 +233,8 @@ function frameTarget(N, img, perm, frameH) {
     pos[i * 3] = ((cx + 0.5) / gw - 0.5) * frameW;
     pos[i * 3 + 1] = (0.5 - (cy + 0.5) / gh) * frameH;
     pos[i * 3 + 2] = (lum - 0.25) * 0.45;         // bright areas lift toward you: a shallow relief
-    // Lift the blacks to a faint indigo so the frame's silhouette still reads.
-    // Lift midtones (keeping hue); let near-black fall away so the subject floats on the night.
-    const lift = (Math.pow(lum, 0.55) / Math.max(lum, 0.0001)) * 0.9 * (lum < 0.03 ? 0.25 : 1);
-    col[i * 3] = Math.min(1, r * lift); col[i * 3 + 1] = Math.min(1, gg * lift); col[i * 3 + 2] = Math.min(1, b * lift);
+    // True colour, printed as dots on paper.
+    col[i * 3] = r; col[i * 3 + 1] = gg; col[i * 3 + 2] = b;
   }
   return { pos, col };
 }
@@ -267,11 +271,11 @@ async function buildOpening({ N, word, works, frameH, wordW, reducedMotion }) {
   const mat = new ShaderMaterial({
     vertexShader: particleVertex,
     fragmentShader: particleFragment,
-    transparent: true, depthWrite: false, blending: AdditiveBlending,
+    transparent: true, depthWrite: false,
     uniforms: {
       uMorph: { value: 1 }, uTime: { value: 0 }, uNoise: { value: reducedMotion ? 0 : 1 }, uScatter: { value: 0 },
       uMouse: { value: new Vector3(99, 99, 0) }, uMouseK: { value: 0 },
-      uSize: { value: 3.2 }, uJitter: { value: 0.7 }, uPixelRatio: { value: 1 }, uGain: { value: reducedMotion ? 0.5 : 0.9 },
+      uSize: { value: 2.8 }, uJitter: { value: 0.7 }, uPixelRatio: { value: 1 }, uGain: { value: 1 },
     },
   });
   const points = new Points(geo, mat);
@@ -279,9 +283,9 @@ async function buildOpening({ N, word, works, frameH, wordW, reducedMotion }) {
 
   // Sequence: noise → name → film 1 → film 2 → film 3 → name → film 1 …
   const steps = [
-    { target: noise, hold: 0.9, label: 'noise', gain: 0.9, size: 3.2, jitter: 0.7, noise: 1 },
-    { target: name, hold: 2.8, label: 'name', gain: 0.5, size: 2.6, jitter: 0.5, noise: 0 },
-    ...films.map((f) => ({ target: f, hold: 3.6, label: f.label, gain: 1.5, size: 3.8, jitter: 0.12, noise: 0 })),
+    { target: noise, hold: 0.9, label: 'noise', gain: 1, size: 2.8, jitter: 0.7, noise: 1 },
+    { target: name, hold: 2.8, label: 'name', gain: 1, size: 2.4, jitter: 0.4, noise: 0 },
+    ...films.map((f) => ({ target: f, hold: 3.6, label: f.label, gain: 1, size: 3.6, jitter: 0.12, noise: 0 })),
   ];
   const MORPH = 2.0;
   let step = 0, clock = 0, morphing = false;
@@ -324,13 +328,13 @@ async function buildOpening({ N, word, works, frameH, wordW, reducedMotion }) {
 /* ── Studio props ─────────────────────────────────────────────────── */
 function buildPrint(tex, w, h, glow) {
   const g = new Group();
-  const frame = new Mesh(new BoxGeometry(w + 0.14, h + 0.14, 0.05), new MeshStandardMaterial({ color: '#15103a', roughness: 0.4, metalness: 0.5 }));
+  const frame = new Mesh(new BoxGeometry(w + 0.14, h + 0.14, 0.05), whiteMat());
   const photo = new Mesh(new PlaneGeometry(w, h), new MeshBasicMaterial({ map: tex, toneMapped: false }));
   photo.position.z = 0.027;
-  const edge = neonFrame(glow, w + 0.2, h + 0.2, 0.022, 3);
-  edge.position.z = 0.03;
+  const edge = neonFrame(glow, w + 0.2, 0.02, 0.02);   // a thin accent rule under the print
+  edge.position.set(0, -h / 2 - 0.16, 0.03);
   g.add(frame, photo, edge);
-  const wireMat = new MeshBasicMaterial({ color: '#4a4290' });
+  const wireMat = new MeshBasicMaterial({ color: '#9b968c' });
   for (const x of [-w / 2 + 0.1, w / 2 - 0.1]) {
     const wire = new Mesh(new CylinderGeometry(0.006, 0.006, 2.2, 4), wireMat);
     wire.position.set(x, h / 2 + 1.18, 0);
@@ -342,16 +346,17 @@ function buildPrint(tex, w, h, glow) {
 function buildMonitor(posterTex, glow) {
   const g = new Group();
   const w = 1.6, h = 2.84;
-  const dark = new MeshStandardMaterial({ color: '#100c2c', roughness: 0.3, metalness: 0.6 });
-  const chrome = new MeshStandardMaterial({ color: '#b8b4e0', roughness: 0.2, metalness: 1 });
-  const base = new Mesh(new CylinderGeometry(0.5, 0.56, 0.06, 48), dark); base.position.y = 0.03;
-  const baseRing = new Mesh(new TorusGeometry(0.53, 0.012, 8, 64), neon(glow, 3));
+  const dark = new MeshStandardMaterial({ color: '#211e1a', roughness: 0.35, metalness: 0.3 });
+  const chrome = new MeshStandardMaterial({ color: METAL, roughness: 0.25, metalness: 0.9 });
+  const satin = whiteMat('#f4efe7', 0.5);
+  const base = new Mesh(new CylinderGeometry(0.5, 0.56, 0.06, 48), satin); base.position.y = 0.03;
+  const baseRing = new Mesh(new TorusGeometry(0.53, 0.012, 8, 64), neon(glow));
   baseRing.rotation.x = Math.PI / 2; baseRing.position.y = 0.065;
   const pole = new Mesh(new CylinderGeometry(0.035, 0.035, 0.9, 16), chrome); pole.position.y = 0.48;
   const bezel = new Mesh(new BoxGeometry(w + 0.1, h + 0.1, 0.09), dark); bezel.position.y = 0.92 + h / 2;
   const screenMat = new MeshBasicMaterial({ map: posterTex, toneMapped: false });
   const screen = new Mesh(new PlaneGeometry(w, h), screenMat); screen.position.set(0, 0.92 + h / 2, 0.047);
-  const under = new Mesh(new BoxGeometry(w + 0.1, 0.03, 0.03), neon(glow, 3.5));
+  const under = new Mesh(new BoxGeometry(w + 0.1, 0.03, 0.03), neon(glow));
   under.position.set(0, 0.86, 0.05);
   g.add(base, baseRing, pole, bezel, screen, under, glowPool(glow, 2.6, 2.6, 0.55));
   return { group: g, screenMat };
@@ -359,14 +364,14 @@ function buildMonitor(posterTex, glow) {
 
 function buildSoftbox(face) {
   const g = new Group();
-  const fabric = new MeshStandardMaterial({ color: '#14102f', roughness: 0.8, metalness: 0.1 });
+  const fabric = new MeshStandardMaterial({ color: '#b9b1a5', roughness: 0.9, metalness: 0 });   // warm stone fabric
   const body = new Mesh(new CylinderGeometry(0.78, 0.2, 0.75, 4, 1, true), fabric);
   body.rotation.set(Math.PI / 2, Math.PI / 4, 0);
   body.scale.set(1.25, 1, 0.82);
   body.position.z = -0.37;
-  const ring = new Mesh(new TorusGeometry(0.16, 0.035, 8, 24), new MeshStandardMaterial({ color: '#b8b4e0', roughness: 0.25, metalness: 1 }));
+  const ring = new Mesh(new TorusGeometry(0.16, 0.035, 8, 24), new MeshStandardMaterial({ color: METAL, roughness: 0.25, metalness: 0.9 }));
   ring.position.z = -0.76;
-  const diffuser = new Mesh(new PlaneGeometry(1.36, 0.88), neon(face, 2.4));
+  const diffuser = new Mesh(new PlaneGeometry(1.36, 0.88), new MeshBasicMaterial({ color: face, toneMapped: false }));
   const rim = new Mesh(new BoxGeometry(1.44, 0.96, 0.03), fabric);
   rim.position.z = -0.02;
   g.add(body, ring, rim, diffuser);
@@ -375,8 +380,8 @@ function buildSoftbox(face) {
 
 function buildTrackAndMarks() {
   const g = new Group();
-  const railMat = new MeshStandardMaterial({ color: '#c9c5f0', roughness: 0.15, metalness: 1 });
-  const sleeperMat = new MeshStandardMaterial({ color: '#1b1644', roughness: 0.6, metalness: 0.3 });
+  const railMat = new MeshStandardMaterial({ color: METAL, roughness: 0.2, metalness: 0.9 });
+  const sleeperMat = new MeshStandardMaterial({ color: '#d9c4a0', roughness: 0.8, metalness: 0 });   // light oak
   const L = 26;
   for (const x of [-0.34, 0.34]) {
     const rail = new Mesh(new CylinderGeometry(0.028, 0.028, L, 12), railMat);
@@ -389,32 +394,32 @@ function buildTrackAndMarks() {
     s.position.set(0, 0.03, z);
     g.add(s);
   }
-  // Dolly: low platform with a camera; its tally light glows orange.
+  // Dolly: low white platform with a camera; its tally light is coral.
   const dolly = new Group();
-  const deck = new Mesh(new BoxGeometry(1.1, 0.12, 1.4), new MeshStandardMaterial({ color: '#1d1848', roughness: 0.4, metalness: 0.5 }));
+  const deck = new Mesh(new BoxGeometry(1.1, 0.12, 1.4), whiteMat('#faf7f2', 0.45));
   deck.position.y = 0.22;
-  const deckGlow = neonFrame(CYAN, 1.1, 1.4, 0.02, 2.6);
+  const deckGlow = neonFrame(ACCENT, 1.1, 1.4, 0.02);
   deckGlow.rotation.x = -Math.PI / 2; deckGlow.position.y = 0.16;
   const column = new Mesh(new CylinderGeometry(0.07, 0.09, 0.9, 16), railMat); column.position.y = 0.72;
-  const cam = new Mesh(new BoxGeometry(0.42, 0.34, 0.62), new MeshStandardMaterial({ color: '#0f0b28', roughness: 0.35, metalness: 0.6 }));
+  const cam = new Mesh(new BoxGeometry(0.42, 0.34, 0.62), new MeshStandardMaterial({ color: '#211e1a', roughness: 0.4, metalness: 0.3 }));
   cam.position.y = 1.32;
-  const lens = new Mesh(new CylinderGeometry(0.12, 0.14, 0.34, 32), new MeshStandardMaterial({ color: '#1a1540', roughness: 0.3, metalness: 0.7 }));
+  const lens = new Mesh(new CylinderGeometry(0.12, 0.14, 0.34, 32), new MeshStandardMaterial({ color: '#2d2924', roughness: 0.3, metalness: 0.6 }));
   lens.rotation.x = Math.PI / 2; lens.position.set(0, 1.32, -0.46);
-  const tally = new Mesh(new SphereGeometry(0.035, 12, 8), neon(ORANGE, 5));
+  const tally = new Mesh(new SphereGeometry(0.035, 12, 8), new MeshBasicMaterial({ color: CORAL }));
   tally.position.set(0.16, 1.52, -0.2);
-  dolly.add(deck, deckGlow, column, cam, lens, tally, glowPool(CYAN, 2.4, 2.8, 0.45));
+  dolly.add(deck, deckGlow, column, cam, lens, tally, glowPool(ACCENT, 2.4, 2.8, 0.45));
   g.add(dolly);
 
-  // Tape marks: a glowing T and its number per step, beside the track.
+  // Tape marks: a gaffer-tape T and its number per step, beside the track.
   TAPE.forEach((color, i) => {
     const m = new Group();
-    const mat = neon(color, 3);
+    const mat = new MeshBasicMaterial({ color });
     const bar = new Mesh(new PlaneGeometry(0.62, 0.09), mat);
     const stem = new Mesh(new PlaneGeometry(0.09, 0.42), mat);
     stem.position.y = -0.25;
     const num = new Mesh(new PlaneGeometry(0.8, 1.0), new MeshBasicMaterial({
       map: canvasTexture(128, 160, (c, W, H) => { c.fillStyle = '#fff'; c.font = `900 150px ${DISPLAY}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), W / 2, H / 2 + 8); }),
-      color: new Color(color).multiplyScalar(2.6), transparent: true, depthWrite: false,
+      color: new Color(color), transparent: true, depthWrite: false,
     }));
     num.position.set(0.75, -0.12, 0);
     m.add(bar, stem, num);
@@ -422,9 +427,6 @@ function buildTrackAndMarks() {
     m.scale.setScalar(1.5);
     m.position.set(1.45, 0.008, L / 2 - 8.0 - i * 3.3);   // step 1 nearest the camera
     g.add(m);
-    const pool = glowPool(color, 2.2, 2.2, 0.35);
-    pool.position.set(1.7, 0.005, m.position.z);
-    g.add(pool);
   });
   return { group: g, dolly, trackLength: L };
 }
@@ -433,35 +435,35 @@ function buildClapper({ name, maxAniso }) {
   const g = new Group();
   const W = 2.6, H = 1.9;
   const faceTex = canvasTexture(1040, 760, (c, w, h) => {
-    c.fillStyle = '#100c2a'; c.fillRect(0, 0, w, h);
-    c.strokeStyle = '#d8d4ff'; c.lineWidth = 5;
+    c.fillStyle = '#1c1a17'; c.fillRect(0, 0, w, h);
+    c.strokeStyle = '#ebe5dc'; c.lineWidth = 5;
     const rows = [0, 210, 400, 580, h];
     rows.slice(1, -1).forEach((y) => { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); });
     [[400, 210, 400], [700, 210, 400], [520, 400, 580]].forEach(([x, y0, y1]) => { c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y1); c.stroke(); });
-    c.fillStyle = '#8f8ac0'; c.font = `600 30px ${BODY}`;
+    c.fillStyle = '#a39c92'; c.font = `600 30px ${BODY}`;
     c.fillText('PROD.', 24, 44); c.fillText('ROLL', 24, 254); c.fillText('SCENE', 424, 254); c.fillText('TAKE', 724, 254);
     c.fillText('DIRECTOR', 24, 444); c.fillText('CAMERA', 544, 444); c.fillText('DATE', 24, 624);
-    c.fillStyle = ICE; c.font = `800 120px ${DISPLAY}`;
+    c.fillStyle = WHITE; c.font = `800 120px ${DISPLAY}`;
     c.fillText('YOUR BRAND', 24, 170);
-    c.font = `800 110px ${DISPLAY}`; c.fillStyle = CYAN;
-    c.fillText('A001', 24, 370); c.fillStyle = ICE; c.fillText('1', 424, 370); c.fillText('1', 724, 370);
+    c.font = `800 110px ${DISPLAY}`; c.fillStyle = '#5fc4b8';
+    c.fillText('A001', 24, 370); c.fillStyle = WHITE; c.fillText('1', 424, 370); c.fillText('1', 724, 370);
     c.font = `800 92px ${DISPLAY}`;
     c.fillText(name.split(' ').slice(-1)[0].toUpperCase(), 24, 548); c.fillText('A CAM', 544, 548);
-    c.font = `800 82px ${DISPLAY}`; c.fillStyle = ORANGE;
+    c.font = `800 82px ${DISPLAY}`; c.fillStyle = CORAL;
     c.fillText('TODAY', 24, 720);
   }, maxAniso);
-  const edgeMat = new MeshStandardMaterial({ color: '#100c2a', roughness: 0.4, metalness: 0.3 });
+  const edgeMat = new MeshStandardMaterial({ color: '#1c1a17', roughness: 0.45, metalness: 0.2 });
   const board = new Mesh(new BoxGeometry(W, H, 0.08), [
     edgeMat, edgeMat, edgeMat, edgeMat,
     new MeshBasicMaterial({ map: faceTex, toneMapped: false }),
     edgeMat,
   ]);
   board.position.y = H / 2;
-  const outline = neonFrame(ORANGE, W + 0.08, H + 0.08, 0.025, 3);
+  const outline = neonFrame(CORAL, W + 0.08, H + 0.08, 0.02);
   outline.position.set(0, H / 2, 0.05);
   const stripes = canvasTexture(1024, 128, (c, w, h) => {
-    c.fillStyle = ICE; c.fillRect(0, 0, w, h);
-    c.fillStyle = '#100c2a';
+    c.fillStyle = '#faf7f2'; c.fillRect(0, 0, w, h);
+    c.fillStyle = '#1c1a17';
     for (let x = -h; x < w + h; x += 160) { c.beginPath(); c.moveTo(x, h); c.lineTo(x + 80, h); c.lineTo(x + 80 + h, 0); c.lineTo(x + h, 0); c.fill(); }
   }, maxAniso);
   const stripeMat = new MeshBasicMaterial({ map: stripes, toneMapped: false });
@@ -473,19 +475,18 @@ function buildClapper({ name, maxAniso }) {
   const upper = new Mesh(new BoxGeometry(W, 0.3, 0.09), stickMat);
   upper.position.set(W / 2, 0.15, 0);
   hinge.add(upper);
-  g.add(board, outline, lower, hinge, glowPool(ORANGE, 4.2, 2.4, 0.5));
+  g.add(board, lower, hinge, glowPool(CORAL, 4.2, 2.4, 0.5));
   return { group: g, hinge };
 }
 
-// Night sky dome: deep indigo above, a violet glow along the horizon.
+// Studio backdrop: warm paper white, a touch brighter overhead.
 function buildSky() {
   return new Mesh(new SphereGeometry(95, 32, 16), new ShaderMaterial({
     side: BackSide, depthWrite: false, fog: false,
-    uniforms: { uTop: { value: new Color(SKY_TOP) }, uHorizon: { value: new Color(HORIZON) }, uGlow: { value: new Color(CYAN) } },
+    uniforms: { uTop: { value: new Color(SKY_TOP) }, uHorizon: { value: new Color(HORIZON) } },
     vertexShader: 'varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-    fragmentShader: `uniform vec3 uTop; uniform vec3 uHorizon; uniform vec3 uGlow; varying vec3 vDir;
-      void main(){ float h = vDir.y; vec3 c = mix(uHorizon, uTop, smoothstep(-0.02, 0.5, h));
-      c += uGlow * 0.03 * smoothstep(0.0, 0.06, h) * exp(-h * 18.0);
+    fragmentShader: `uniform vec3 uTop; uniform vec3 uHorizon; varying vec3 vDir;
+      void main(){ float h = vDir.y; vec3 c = mix(uHorizon, uTop, smoothstep(-0.02, 0.6, h));
       gl_FragColor = vec4(c, 1.0); }`,
   }));
 }
@@ -510,35 +511,47 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   const maxDpr = small ? 1.5 : 1.75;
   let dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
   renderer.setPixelRatio(dpr);
-  renderer.toneMapping = ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMapping = NoToneMapping;          // exact paper white, no grey cast
+  renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = PCFShadowMap;      // with a blur radius: soft, studio-like edges
   const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   const hq = !small;
 
   const scene = new Scene();
   scene.background = new Color(SKY_TOP);
-  scene.fog = new Fog(FOG, 9, 32);
+  scene.fog = new Fog(FOG, 15, 42);
   const pmrem = new PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.22;
-  scene.add(new HemisphereLight('#6a58ff', '#0b0820', 0.7));
-  const key = new DirectionalLight('#9fefff', 1.1);
-  key.position.set(-6, 9, 6);
-  const rim = new DirectionalLight('#ffa040', 0.9);
-  rim.position.set(7, 5, -6);
-  scene.add(key, rim);
+  scene.environmentIntensity = 0.35;
+  scene.add(new HemisphereLight('#fffaf3', '#e3d8c8', 0.62));
+  // Key light follows the camera's subject so one sharp shadow map covers whatever is on screen.
+  const KEY_OFFSET = new Vector3(3.5, 12, -2.5);   // upper right, slightly behind: shadows fall forward-left, into view
+  const key = new DirectionalLight('#fff1df', 0.62);
+  key.castShadow = true;
+  key.shadow.mapSize.set(hq ? 2048 : 1024, hq ? 2048 : 1024);
+  Object.assign(key.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 0.5, far: 40 });
+  key.shadow.camera.updateProjectionMatrix();
+  key.shadow.bias = -0.0004;
+  key.shadow.normalBias = 0.03;
+  key.shadow.radius = 6;
+  key.shadow.blurSamples = 12;
+  const fill = new DirectionalLight('#e2eaff', 0.18);
+  fill.position.set(-7, 5, 8);
+  scene.add(key, key.target, fill);
 
   const camera = new PerspectiveCamera(36, 1, 0.05, 200);
   const sky = buildSky();
   scene.add(sky);
 
-  // Glossy dark floor with a faint violet grid that fades into the fog.
-  const floor = new Mesh(new PlaneGeometry(400, 400), new MeshStandardMaterial({ color: FLOOR, roughness: 0.28, metalness: 0.6 }));
+  // Matte paper floor with a faint drafting grid that fades into the backdrop.
+  const floor = new Mesh(new PlaneGeometry(400, 400), new MeshStandardMaterial({ color: FLOOR, roughness: 0.92, metalness: 0 }));
   floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
   scene.add(floor);
-  const grid = new GridHelper(240, 160, VIOLET, VIOLET);
-  grid.material.transparent = true; grid.material.opacity = 0.14; grid.material.depthWrite = false;
+  const grid = new GridHelper(240, 160, '#c9bfb1', '#c9bfb1');
+  grid.material.transparent = true; grid.material.opacity = 0.28; grid.material.depthWrite = false;
   grid.position.y = 0.003;
   scene.add(grid);
 
@@ -551,7 +564,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   const opening = await buildOpening({ N, word, works, frameH: 5.2, wordW: 4.8, reducedMotion });
   opening.points.position.copy(ORIGIN);
   scene.add(opening.points);
-  const openingPool = glowPool(CYAN, 9, 5, 0.25);
+  const openingPool = glowPool(INK, 9, 5, 0.12);
   openingPool.position.set(0, 0.006, 0.4);
   scene.add(openingPool);
 
@@ -559,7 +572,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   const ABOUT = new Vector3(3.6, 2.3, -17);
   const prints = [];
   photos.slice(0, 2).forEach((p, i) => {
-    const glow = i ? ORANGE : CYAN;
+    const glow = i ? MINT : ACCENT;
     const print = buildPrint(loadTex(p.src), 1.5, 2.25, glow);
     prints.push(print);
     print.position.set(ABOUT.x - 0.9 + i * 2.1, 2.3 + (i ? 0.3 : 0), ABOUT.z - i * 1.2);
@@ -571,7 +584,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
 
   /* Scene 2 — monitors */
   const WORK = new Vector3(4.0, 2.3, -34);
-  const monitorGlow = [CYAN, ORANGE, LIME];
+  const monitorGlow = [ACCENT, ACCENT, ACCENT];
   const monitors = works.slice(0, 3).map((w, i) => {
     const m = buildMonitor(loadTex(w.poster), monitorGlow[i % 3]);
     const a = (i - 1) * 0.42;
@@ -598,16 +611,16 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
     };
   });
 
-  /* Scene 3 — neon lighting rig over a product */
+  /* Scene 3 — softbox rig over a product */
   const SERV = new Vector3(3.6, 2.2, -51);
   const rig = new Group();
-  const pipeMat = new MeshStandardMaterial({ color: '#b8b4e0', roughness: 0.2, metalness: 1 });
+  const pipeMat = new MeshStandardMaterial({ color: METAL, roughness: 0.25, metalness: 0.9 });
   for (const z of [-1.2, 1.2]) {
     const pipe = new Mesh(new CylinderGeometry(0.04, 0.04, 9, 12), pipeMat);
     pipe.rotation.z = Math.PI / 2; pipe.position.set(0, 4.6, z);
     rig.add(pipe);
   }
-  const faces = [ICE, CYAN, ORANGE, ICE, LIME, CYAN];
+  const faces = [WHITE, '#fff0e2', WHITE, '#e9f5f3', WHITE, '#fff0e2'];
   const softboxes = faces.map((f, i) => {
     const sb = buildSoftbox(f);
     const col = i % 3, row = Math.floor(i / 3);
@@ -620,19 +633,19 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   rig.position.copy(SERV).setY(0);
   scene.add(rig);
   const PRODUCT = new Vector3(SERV.x, 1.25, SERV.z + 0.4);
-  const pedestal = new Mesh(new CylinderGeometry(0.62, 0.66, 1.0, 64), new MeshStandardMaterial({ color: '#1a1544', roughness: 0.25, metalness: 0.6 }));
+  const pedestal = new Mesh(new CylinderGeometry(0.62, 0.66, 1.0, 64), whiteMat());
   pedestal.position.set(PRODUCT.x, 0.5, PRODUCT.z);
-  const pedRing = new Mesh(new TorusGeometry(0.625, 0.016, 8, 96), neon(CYAN, 3.5));
+  const pedRing = new Mesh(new TorusGeometry(0.625, 0.016, 8, 96), neon(ACCENT));
   pedRing.rotation.x = Math.PI / 2; pedRing.position.set(PRODUCT.x, 1.0, PRODUCT.z);
-  const sphere = new Mesh(new SphereGeometry(0.38, 64, 32), new MeshStandardMaterial({ color: '#ffffff', roughness: 0.04, metalness: 1, envMapIntensity: 3 }));
+  const sphere = new Mesh(new SphereGeometry(0.38, 64, 32), new MeshStandardMaterial({ color: '#ffffff', roughness: 0.05, metalness: 1, envMapIntensity: 1.6 }));
   sphere.position.set(PRODUCT.x - 0.2, 1.38, PRODUCT.z + 0.08);
   const cube = new Mesh(new BoxGeometry(0.46, 0.46, 0.46), new MeshPhysicalMaterial({
-    color: ORANGE, emissive: ORANGE, emissiveIntensity: 0.55, roughness: 0.1, metalness: 0,
+    color: '#14a396', emissive: MINT, emissiveIntensity: 0.15, roughness: 0.1, metalness: 0,
     transmission: hq ? 0.6 : 0, thickness: 0.4, ior: 1.45, clearcoat: 1,
   }));
   cube.position.set(PRODUCT.x + 0.3, 1.23, PRODUCT.z - 0.12);
   cube.rotation.set(0.2, 0.6, 0);
-  const pedPool = glowPool(CYAN, 4.2, 4.2, 0.5);
+  const pedPool = glowPool(INK, 4.2, 4.2, 0.5);
   pedPool.position.set(PRODUCT.x, 0.006, PRODUCT.z);
   scene.add(pedestal, pedRing, sphere, cube, pedPool);
   rig.updateMatrixWorld(true);
@@ -653,14 +666,17 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   clap.group.children[0].rotation.x = -0.06;
   scene.add(clap.group);
 
-  /* ── Glow (bloom) ──────────────────────────────────────────────── */
+  /* ── Soft shadows: every solid prop casts and receives ─────────── */
+  scene.traverse((o) => {
+    if (o.isMesh && o !== floor && o !== sky && !o.material.transparent) { o.castShadow = true; o.receiveShadow = true; }
+  });
+
+  /* ── Render (multisampled, then tone mapping + sRGB) ───────────── */
   const rt = new WebGLRenderTarget(1, 1, { type: HalfFloatType, samples: hq ? 4 : 2 });
   const composer = new EffectComposer(renderer, rt);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new Vector2(256, 256), small ? 0.75 : 0.95, 0.55, 0.92);
-  composer.addPass(bloom);
   composer.addPass(new OutputPass());
-  let useBloom = true;
+  let useShadows = true;
 
   /* ── Camera path ───────────────────────────────────────────────── */
   const STOPS = [
@@ -780,6 +796,9 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
     camera.position.copy(camPos);
     camera.lookAt(camLook);
     sky.position.copy(camera.position);
+    key.target.position.copy(camLook);
+    key.position.copy(camLook).add(KEY_OFFSET);
+    key.target.updateMatrixWorld();
 
     // Opening particles
     const u = opening.mat.uniforms;
@@ -820,17 +839,17 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
       clap.hinge.rotation.z = reducedMotion ? 0.32 : 0.5;
     }
 
-    if (useBloom) composer.render(dt); else renderer.render(scene, camera);
+    composer.render(dt);
     dirty = false;
     if (!readyFired) { readyFired = true; onReady?.(); onPhase?.(opening.labelNow()); }
 
-    // Adaptive quality: lower resolution first, then drop the glow pass, then halve the particles.
+    // Adaptive quality: lower resolution first, then drop the shadows, then halve the particles.
     frames++;
     if (dt > 0.028) slowFrames++;
     if (frames === 90) {
       if (slowFrames > 45) {
         if (dpr > 1) { dpr = Math.max(1, dpr - 0.35); resize(true); }
-        else if (useBloom) useBloom = false;
+        else if (useShadows) { useShadows = false; key.castShadow = false; }
         else opening.points.geometry.setDrawRange(0, (N / 2) | 0);
       }
       frames = 0; slowFrames = 0;
