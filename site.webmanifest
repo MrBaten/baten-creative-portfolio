@@ -4,8 +4,8 @@
   "description": "Official creative portfolio of Md Abu Baten, AI Creative Director and Generative Video Specialist.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fdfdfb",
-  "theme_color": "#fdfdfb",
+  "background_color": "#f4f4f1",
+  "theme_color": "#111111",
   "icons": [
     {
       "src": "/icon-192.png",

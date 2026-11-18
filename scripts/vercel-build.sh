@@ -8,7 +8,7 @@ npm run build:3d
 rm -rf public
 mkdir -p public/src
 cp index.html 404.html robots.txt sitemap.xml site.webmanifest \
-   favicon.ico favicon.png favicon-16x16.png favicon-32x32.png \
+   favicon.svg favicon.ico favicon.png favicon-16x16.png favicon-32x32.png \
    apple-touch-icon.png icon-192.png icon-512.png public/
 cp -R src/app src/styles src/data src/media public/src/
 mkdir -p public/src/assets
