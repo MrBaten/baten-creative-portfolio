@@ -1,10 +1,13 @@
 # Md Abu Baten · AI Creative Director — Portfolio
 
-Personal site of **Md Abu Baten**: a neon night film studio in 3D that you scroll through.
-It opens with ~30,000 glowing particles that turn from noise into the name "BATEN" and then into
-frames from the commercials (the way generative video turns noise into film). Scrolling blows the
-particles past the camera into the studio: portraits, monitors playing the films, a neon lighting
-rig, a dolly track and a clapperboard. Palette: midnight indigo, electric cyan, solar orange, laser lime.
+Personal site of **Md Abu Baten**: a bright daylight film studio in 3D that you scroll through.
+It opens with ~30,000 ink dots that turn from noise into the name "BATEN" and then into frames
+from the commercials (the way generative video turns noise into film). Scrolling blows the dots
+past the camera into a white infinity-cove studio with soft shadows: gallery prints, monitors playing
+the films, a softbox rig over a product, a dolly track and a clapperboard.
+Palette: a warm "teal & orange" film grade — paper, cream and warm ink; ember (#c2410c) is the one
+accent, deep teal (#0f766e) the cool counterweight; ochre and slate only on the process steps.
+Type: Inter Tight (display) and Inter (text).
 
 - Live: https://abubaten.vercel.app
 - Repo: https://github.com/MrBaten/baten-creative-portfolio

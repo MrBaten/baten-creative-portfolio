@@ -3,6 +3,8 @@
 # Repo files such as README, package.json, scripts/, src/3d/ (3D source) and the
 # full-length raw films in src/assets/Projects/ are left out of the live site.
 set -e
+# Build the 3D bundle from its source (src/3d/world.js -> src/app/world.bundle.js).
+npm run build:3d
 rm -rf public
 mkdir -p public/src
 cp index.html 404.html robots.txt sitemap.xml site.webmanifest \
