@@ -10,9 +10,8 @@
  * (Services), a dolly track with four gaffer-tape marks (Process) and a
  * clapperboard (Contact).
  *
- * Palette: a warm "teal & orange" film grade — paper, cream and warm ink;
- * ember is the one accent, deep teal the cool counterweight; ochre and slate
- * join them only on the four process marks.
+ * Palette: monochrome + acid lime — off-white studio, black props and type,
+ * lime only as a solid fill (cube, rings, tally light, slate lettering).
  *
  * Source file. The browser loads src/app/world.bundle.js — rebuild with
  * `npm run build:3d` after editing.
@@ -31,21 +30,22 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
 /* ── Palette ──────────────────────────────────────────────────────── */
-const SKY_TOP = '#f8f6f2';
-const HORIZON = '#f2eee8';
-const FOG = '#f2eee8';                         // = horizon, so the floor curves into the backdrop like an infinity cove
-const FLOOR = '#f0ebe3';
-const INK = '#1c1a17';
-const ACCENT = '#c2410c';                      // ember: the one accent (same as the page)
-const CORAL = '#e8622c';                       // a brighter ember for small lit details
-const MINT = '#0f766e';                        // deep teal: the cool counterweight
-const AMBER = '#a16207';                       // ochre
-const SLATE = '#3f4b5b';
+const SKY_TOP = '#f8f8f6';
+const HORIZON = '#f2f2ef';
+const FOG = '#f2f2ef';                         // = horizon, so the floor curves into the backdrop like an infinity cove
+const FLOOR = '#efefeb';
+const INK = '#111111';
+const LIME = '#d4ff3f';                        // the one accent (same as the page) — fills only
+const ACCENT = LIME;
+const CORAL = LIME;                            // small lit details (tally light, slate lettering)
+const MINT = LIME;
+const AMBER = INK;
+const SLATE = INK;
 const WHITE = '#ffffff';
-const METAL = '#ddd7cd';                       // warm brushed aluminium
+const METAL = '#d6d6d2';                       // brushed aluminium
 // White props get a whisper of self-light so they read as white, not grey, in the soft light.
-const whiteMat = (color = '#ffffff', roughness = 0.55) => new MeshStandardMaterial({ color, roughness, metalness: 0, emissive: '#fff7ee', emissiveIntensity: 0.22 });
-const TAPE = [ACCENT, MINT, AMBER, SLATE];   // one gaffer-tape mark per process step (matches the page)
+const whiteMat = (color = '#ffffff', roughness = 0.55) => new MeshStandardMaterial({ color, roughness, metalness: 0, emissive: '#ffffff', emissiveIntensity: 0.22 });
+const TAPE = [INK, INK, INK, INK];           // black gaffer tape, one numbered mark per process step (matches the page)
 
 const smooth = (a, b, x) => { const t = MathUtils.clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
 const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
@@ -78,7 +78,7 @@ const radial = () => (radialTex ||= canvasTexture(128, 128, (g, W, H) => {
 // A soft contact shadow on the floor under an object (grounds it in the bright studio).
 function glowPool(hex, w, d, opacity = 0.5) {
   const m = new Mesh(new PlaneGeometry(w, d), new MeshBasicMaterial({
-    color: '#3a352c', alphaMap: radial(), transparent: true, opacity: opacity * 0.3, depthWrite: false,
+    color: '#2a2a27', alphaMap: radial(), transparent: true, opacity: opacity * 0.3, depthWrite: false,
   }));
   m.rotation.x = -Math.PI / 2;
   m.position.y = 0.006;
@@ -165,7 +165,7 @@ function shuffled(n) {
   return a;
 }
 
-const PAL = [INK, INK, INK, ACCENT, ACCENT, ACCENT, MINT, AMBER].map((h) => new Color(h));
+const PAL = [INK, INK, INK, INK, '#4a4a46', '#4a4a46', '#8fb81a', '#8fb81a'].map((h) => new Color(h));
 
 function noiseTarget(N) {
   const pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
@@ -194,7 +194,7 @@ function wordTarget(N, word, width) {
   const pts = [];
   for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) if (data[(y * W + x) * 4 + 3] > 128) pts.push(x, y);
   const pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
-  const ink = new Color(INK), accent = new Color(ACCENT), teal = new Color(MINT);
+  const ink = new Color(INK), accent = new Color('#55554f'), teal = new Color('#8fb81a');
   const scale = width / W;
   for (let i = 0; i < N; i++) {
     const k = ((Math.random() * pts.length) / 2 | 0) * 2;
@@ -202,7 +202,7 @@ function wordTarget(N, word, width) {
     pos[i * 3] = (px - W / 2) * scale;
     pos[i * 3 + 1] = (H / 2 - py) * scale;
     pos[i * 3 + 2] = (Math.random() - 0.5) * 0.2;
-    // Dithered gradient: ink on the left, ember gathering to the right, a few teal sparks.
+    // Dithered gradient: black on the left, graphite gathering to the right, a few lime sparks.
     const t = px / W;
     const r = Math.random();
     const c2 = r < 0.035 ? teal : Math.random() < t * t * 0.95 ? accent : ink;
@@ -334,7 +334,7 @@ function buildPrint(tex, w, h, glow) {
   const edge = neonFrame(glow, w + 0.2, 0.02, 0.02);   // a thin accent rule under the print
   edge.position.set(0, -h / 2 - 0.16, 0.03);
   g.add(frame, photo, edge);
-  const wireMat = new MeshBasicMaterial({ color: '#9b968c' });
+  const wireMat = new MeshBasicMaterial({ color: '#9a9a94' });
   for (const x of [-w / 2 + 0.1, w / 2 - 0.1]) {
     const wire = new Mesh(new CylinderGeometry(0.006, 0.006, 2.2, 4), wireMat);
     wire.position.set(x, h / 2 + 1.18, 0);
@@ -346,9 +346,9 @@ function buildPrint(tex, w, h, glow) {
 function buildMonitor(posterTex, glow) {
   const g = new Group();
   const w = 1.6, h = 2.84;
-  const dark = new MeshStandardMaterial({ color: '#211e1a', roughness: 0.35, metalness: 0.3 });
+  const dark = new MeshStandardMaterial({ color: '#141414', roughness: 0.35, metalness: 0.3 });
   const chrome = new MeshStandardMaterial({ color: METAL, roughness: 0.25, metalness: 0.9 });
-  const satin = whiteMat('#f4efe7', 0.5);
+  const satin = new MeshStandardMaterial({ color: '#161616', roughness: 0.4, metalness: 0.2 });   // black base, lime ring
   const base = new Mesh(new CylinderGeometry(0.5, 0.56, 0.06, 48), satin); base.position.y = 0.03;
   const baseRing = new Mesh(new TorusGeometry(0.53, 0.012, 8, 64), neon(glow));
   baseRing.rotation.x = Math.PI / 2; baseRing.position.y = 0.065;
@@ -364,7 +364,7 @@ function buildMonitor(posterTex, glow) {
 
 function buildSoftbox(face) {
   const g = new Group();
-  const fabric = new MeshStandardMaterial({ color: '#b9b1a5', roughness: 0.9, metalness: 0 });   // warm stone fabric
+  const fabric = new MeshStandardMaterial({ color: '#2a2a2a', roughness: 0.9, metalness: 0 });   // black softbox fabric
   const body = new Mesh(new CylinderGeometry(0.78, 0.2, 0.75, 4, 1, true), fabric);
   body.rotation.set(Math.PI / 2, Math.PI / 4, 0);
   body.scale.set(1.25, 1, 0.82);
@@ -381,7 +381,7 @@ function buildSoftbox(face) {
 function buildTrackAndMarks() {
   const g = new Group();
   const railMat = new MeshStandardMaterial({ color: METAL, roughness: 0.2, metalness: 0.9 });
-  const sleeperMat = new MeshStandardMaterial({ color: '#d9c4a0', roughness: 0.8, metalness: 0 });   // light oak
+  const sleeperMat = new MeshStandardMaterial({ color: '#1c1c1c', roughness: 0.7, metalness: 0.1 });   // black sleepers
   const L = 26;
   for (const x of [-0.34, 0.34]) {
     const rail = new Mesh(new CylinderGeometry(0.028, 0.028, L, 12), railMat);
@@ -394,18 +394,18 @@ function buildTrackAndMarks() {
     s.position.set(0, 0.03, z);
     g.add(s);
   }
-  // Dolly: low white platform with a camera; its tally light is coral.
+  // Dolly: low white platform with a camera; its tally light is lime.
   const dolly = new Group();
   const deck = new Mesh(new BoxGeometry(1.1, 0.12, 1.4), whiteMat('#faf7f2', 0.45));
   deck.position.y = 0.22;
-  const deckGlow = neonFrame(ACCENT, 1.1, 1.4, 0.02);
+  const deckGlow = neonFrame(INK, 1.1, 1.4, 0.02);
   deckGlow.rotation.x = -Math.PI / 2; deckGlow.position.y = 0.16;
   const column = new Mesh(new CylinderGeometry(0.07, 0.09, 0.9, 16), railMat); column.position.y = 0.72;
-  const cam = new Mesh(new BoxGeometry(0.42, 0.34, 0.62), new MeshStandardMaterial({ color: '#211e1a', roughness: 0.4, metalness: 0.3 }));
+  const cam = new Mesh(new BoxGeometry(0.42, 0.34, 0.62), new MeshStandardMaterial({ color: '#141414', roughness: 0.4, metalness: 0.3 }));
   cam.position.y = 1.32;
-  const lens = new Mesh(new CylinderGeometry(0.12, 0.14, 0.34, 32), new MeshStandardMaterial({ color: '#2d2924', roughness: 0.3, metalness: 0.6 }));
+  const lens = new Mesh(new CylinderGeometry(0.12, 0.14, 0.34, 32), new MeshStandardMaterial({ color: '#262626', roughness: 0.3, metalness: 0.6 }));
   lens.rotation.x = Math.PI / 2; lens.position.set(0, 1.32, -0.46);
-  const tally = new Mesh(new SphereGeometry(0.035, 12, 8), new MeshBasicMaterial({ color: CORAL }));
+  const tally = new Mesh(new SphereGeometry(0.045, 12, 8), new MeshBasicMaterial({ color: LIME }));
   tally.position.set(0.16, 1.52, -0.2);
   dolly.add(deck, deckGlow, column, cam, lens, tally, glowPool(ACCENT, 2.4, 2.8, 0.45));
   g.add(dolly);
@@ -435,24 +435,24 @@ function buildClapper({ name, maxAniso }) {
   const g = new Group();
   const W = 2.6, H = 1.9;
   const faceTex = canvasTexture(1040, 760, (c, w, h) => {
-    c.fillStyle = '#1c1a17'; c.fillRect(0, 0, w, h);
-    c.strokeStyle = '#ebe5dc'; c.lineWidth = 5;
+    c.fillStyle = '#111111'; c.fillRect(0, 0, w, h);
+    c.strokeStyle = '#e8e8e3'; c.lineWidth = 5;
     const rows = [0, 210, 400, 580, h];
     rows.slice(1, -1).forEach((y) => { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); });
     [[400, 210, 400], [700, 210, 400], [520, 400, 580]].forEach(([x, y0, y1]) => { c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y1); c.stroke(); });
-    c.fillStyle = '#a39c92'; c.font = `600 30px ${BODY}`;
+    c.fillStyle = '#9b9b96'; c.font = `600 30px ${BODY}`;
     c.fillText('PROD.', 24, 44); c.fillText('ROLL', 24, 254); c.fillText('SCENE', 424, 254); c.fillText('TAKE', 724, 254);
     c.fillText('DIRECTOR', 24, 444); c.fillText('CAMERA', 544, 444); c.fillText('DATE', 24, 624);
     c.fillStyle = WHITE; c.font = `800 120px ${DISPLAY}`;
     c.fillText('YOUR BRAND', 24, 170);
-    c.font = `800 110px ${DISPLAY}`; c.fillStyle = '#5fc4b8';
+    c.font = `800 110px ${DISPLAY}`; c.fillStyle = LIME;
     c.fillText('A001', 24, 370); c.fillStyle = WHITE; c.fillText('1', 424, 370); c.fillText('1', 724, 370);
     c.font = `800 92px ${DISPLAY}`;
     c.fillText(name.split(' ').slice(-1)[0].toUpperCase(), 24, 548); c.fillText('A CAM', 544, 548);
     c.font = `800 82px ${DISPLAY}`; c.fillStyle = CORAL;
     c.fillText('TODAY', 24, 720);
   }, maxAniso);
-  const edgeMat = new MeshStandardMaterial({ color: '#1c1a17', roughness: 0.45, metalness: 0.2 });
+  const edgeMat = new MeshStandardMaterial({ color: '#111111', roughness: 0.45, metalness: 0.2 });
   const board = new Mesh(new BoxGeometry(W, H, 0.08), [
     edgeMat, edgeMat, edgeMat, edgeMat,
     new MeshBasicMaterial({ map: faceTex, toneMapped: false }),
@@ -462,8 +462,8 @@ function buildClapper({ name, maxAniso }) {
   const outline = neonFrame(CORAL, W + 0.08, H + 0.08, 0.02);
   outline.position.set(0, H / 2, 0.05);
   const stripes = canvasTexture(1024, 128, (c, w, h) => {
-    c.fillStyle = '#faf7f2'; c.fillRect(0, 0, w, h);
-    c.fillStyle = '#1c1a17';
+    c.fillStyle = '#fafaf8'; c.fillRect(0, 0, w, h);
+    c.fillStyle = '#111111';
     for (let x = -h; x < w + h; x += 160) { c.beginPath(); c.moveTo(x, h); c.lineTo(x + 80, h); c.lineTo(x + 80 + h, 0); c.lineTo(x + h, 0); c.fill(); }
   }, maxAniso);
   const stripeMat = new MeshBasicMaterial({ map: stripes, toneMapped: false });
@@ -525,10 +525,10 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   const pmrem = new PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.35;
-  scene.add(new HemisphereLight('#fffaf3', '#e3d8c8', 0.62));
+  scene.add(new HemisphereLight('#ffffff', '#deded8', 0.62));
   // Key light follows the camera's subject so one sharp shadow map covers whatever is on screen.
   const KEY_OFFSET = new Vector3(3.5, 12, -2.5);   // upper right, slightly behind: shadows fall forward-left, into view
-  const key = new DirectionalLight('#fff1df', 0.62);
+  const key = new DirectionalLight('#fffaf2', 0.62);
   key.castShadow = true;
   key.shadow.mapSize.set(hq ? 2048 : 1024, hq ? 2048 : 1024);
   Object.assign(key.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 0.5, far: 40 });
@@ -550,7 +550,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
   scene.add(floor);
-  const grid = new GridHelper(240, 160, '#c9bfb1', '#c9bfb1');
+  const grid = new GridHelper(240, 160, '#c4c4bd', '#c4c4bd');
   grid.material.transparent = true; grid.material.opacity = 0.28; grid.material.depthWrite = false;
   grid.position.y = 0.003;
   scene.add(grid);
@@ -572,7 +572,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   const ABOUT = new Vector3(3.6, 2.3, -17);
   const prints = [];
   photos.slice(0, 2).forEach((p, i) => {
-    const glow = i ? MINT : ACCENT;
+    const glow = INK;
     const print = buildPrint(loadTex(p.src), 1.5, 2.25, glow);
     prints.push(print);
     print.position.set(ABOUT.x - 0.9 + i * 2.1, 2.3 + (i ? 0.3 : 0), ABOUT.z - i * 1.2);
@@ -620,7 +620,7 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
     pipe.rotation.z = Math.PI / 2; pipe.position.set(0, 4.6, z);
     rig.add(pipe);
   }
-  const faces = [WHITE, '#fff0e2', WHITE, '#e9f5f3', WHITE, '#fff0e2'];
+  const faces = [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE];
   const softboxes = faces.map((f, i) => {
     const sb = buildSoftbox(f);
     const col = i % 3, row = Math.floor(i / 3);
@@ -635,12 +635,12 @@ export async function mountStudio({ canvas, progress, works = [], photos = [], w
   const PRODUCT = new Vector3(SERV.x, 1.25, SERV.z + 0.4);
   const pedestal = new Mesh(new CylinderGeometry(0.62, 0.66, 1.0, 64), whiteMat());
   pedestal.position.set(PRODUCT.x, 0.5, PRODUCT.z);
-  const pedRing = new Mesh(new TorusGeometry(0.625, 0.016, 8, 96), neon(ACCENT));
+  const pedRing = new Mesh(new TorusGeometry(0.625, 0.016, 8, 96), neon(INK));
   pedRing.rotation.x = Math.PI / 2; pedRing.position.set(PRODUCT.x, 1.0, PRODUCT.z);
   const sphere = new Mesh(new SphereGeometry(0.38, 64, 32), new MeshStandardMaterial({ color: '#ffffff', roughness: 0.05, metalness: 1, envMapIntensity: 1.6 }));
   sphere.position.set(PRODUCT.x - 0.2, 1.38, PRODUCT.z + 0.08);
   const cube = new Mesh(new BoxGeometry(0.46, 0.46, 0.46), new MeshPhysicalMaterial({
-    color: '#14a396', emissive: MINT, emissiveIntensity: 0.15, roughness: 0.1, metalness: 0,
+    color: LIME, emissive: LIME, emissiveIntensity: 0.25, roughness: 0.1, metalness: 0,
     transmission: hq ? 0.6 : 0, thickness: 0.4, ior: 1.45, clearcoat: 1,
   }));
   cube.position.set(PRODUCT.x + 0.3, 1.23, PRODUCT.z - 0.12);
