@@ -50,6 +50,8 @@ export const content = {
   /* ── FIRST SCREEN ────────────────────────────────────────────── */
   hero: {
     headline: "I direct cinematic AI films that make brands unforgettable.",
+    // One word of the headline to mark in lime (leave "" for none)
+    highlight: "cinematic",
     intro:
       "Senior creative direction meets generative video pipelines: broadcast-grade commercial films, tactile ad worlds and visual campaigns, made with cinematic taste and fast execution.",
     primaryAction: "Watch the films",

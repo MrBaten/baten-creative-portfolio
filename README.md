@@ -1,12 +1,12 @@
 # Md Abu Baten · AI Creative Director — Portfolio
 
-Personal site of **Md Abu Baten**: a bright daylight film studio in 3D that you scroll through.
+Personal site of **Md Abu Baten**: a bright monochrome film studio in 3D that you scroll through.
 It opens with ~30,000 ink dots that turn from noise into the name "BATEN" and then into frames
 from the commercials (the way generative video turns noise into film). Scrolling blows the dots
 past the camera into a white infinity-cove studio with soft shadows: gallery prints, monitors playing
 the films, a softbox rig over a product, a dolly track and a clapperboard.
-Palette: a warm "teal & orange" film grade — paper, cream and warm ink; ember (#c2410c) is the one
-accent, deep teal (#0f766e) the cool counterweight; ochre and slate only on the process steps.
+Palette: monochrome + acid lime — off-white, white and black; lime (#d4ff3f) is the one accent,
+used only as a fill with black on it. The headline word marked in lime is set in src/data/content.js (hero.highlight).
 Type: Inter Tight (display) and Inter (text).
 
 - Live: https://abubaten.vercel.app
