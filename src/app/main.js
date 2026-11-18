@@ -1,5 +1,5 @@
 /**
- * Page logic for optiobyte.com.
+ * Page logic for the Md Abu Baten portfolio.
  * Renders every section from src/data/content.js, wires up the interface,
  * and drives the 3D studio (src/3d/world.js → src/app/world.bundle.js).
  */
@@ -315,7 +315,7 @@ function loadStudio(content, scroll) {
 
   const start = async () => {
     try {
-      const { mountStudio } = await import('./world.bundle.js?v=6');
+      const { mountStudio } = await import('./world.bundle.js?v=7');
       mountStudio({
         canvas,
         progress: () => scroll.get(),
