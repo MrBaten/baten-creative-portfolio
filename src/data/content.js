@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  OPTIOBYTE.COM — ALL SITE CONTENT LIVES IN THIS ONE FILE         ║
+ * ║  MD ABU BATEN — ALL SITE CONTENT LIVES IN THIS ONE FILE         ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * How to update (on GitHub): open this file → click the pencil icon →
@@ -33,7 +33,7 @@ export const content = {
     role: "AI Creative Director & Generative Video Specialist",
     location: "Dhaka, Bangladesh",
     reach: "Directing for brands worldwide",
-    email: "baten@optiobyte.com",
+    email: "baten.nub@gmail.com",
     bookingLink: "https://cal.com/abubaten",
     bookingLabel: "Book a 15-minute call",
     replyTime: "Replies within 24–48 hours",
@@ -249,6 +249,6 @@ export const content = {
     projectTypes: ["Commercial spot", "Generative video", "Creative direction", "Retainer or consulting"],
     directLabel: "Prefer email or a call?",
     // Form submissions are sent through FormSubmit to this address
-    formEmail: "baten@optiobyte.com",
+    formEmail: "baten.nub@gmail.com",
   },
 };
