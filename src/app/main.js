@@ -4,6 +4,8 @@
  * and drives the 3D studio (src/3d/world.js → src/app/world.bundle.js).
  */
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// Wraps the first occurrence of an (already escaped) word in a lime marker.
+const markWord = (html, word) => (word && html.includes(word) ? html.replace(word, `<mark class="hl">${word}</mark>`) : html);
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const reduceMotion = document.documentElement.classList.contains('reduce-motion');
@@ -38,7 +40,7 @@ function render(c) {
 
   $('[data-slot="hero"]').innerHTML = `
     <p class="hero-role">${esc(p.role)}</p>
-    <h1 class="hero-title" id="hero-title">${esc(hero.headline)}</h1>
+    <h1 class="hero-title" id="hero-title">${markWord(esc(hero.headline), esc(hero.highlight))}</h1>
     <p class="hero-intro">${esc(hero.intro)}</p>
     <div class="hero-actions">
       <a class="button" href="#work">${ICON_PLAY}${esc(hero.primaryAction)}</a>
@@ -315,7 +317,7 @@ function loadStudio(content, scroll) {
 
   const start = async () => {
     try {
-      const { mountStudio } = await import('./world.bundle.js?v=7');
+      const { mountStudio } = await import('./world.bundle.js?v=8');
       mountStudio({
         canvas,
         progress: () => scroll.get(),
