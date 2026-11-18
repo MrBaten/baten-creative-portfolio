@@ -1,4 +1,4 @@
-# Md Abu Baten · AI Creative Director — optiobyte.com
+# Md Abu Baten · AI Creative Director — Portfolio
 
 Personal site of **Md Abu Baten**: a neon night film studio in 3D that you scroll through.
 It opens with ~30,000 glowing particles that turn from noise into the name "BATEN" and then into
@@ -6,9 +6,9 @@ frames from the commercials (the way generative video turns noise into film). Sc
 particles past the camera into the studio: portraits, monitors playing the films, a neon lighting
 rig, a dolly track and a clapperboard. Palette: midnight indigo, electric cyan, solar orange, laser lime.
 
-- Live: https://optiobyte.com
+- Live: https://abubaten.vercel.app
 - Repo: https://github.com/MrBaten/baten-creative-portfolio
-- Contact: baten@optiobyte.com
+- Contact: baten.nub@gmail.com
 
 ---
 
@@ -82,9 +82,13 @@ When you change `site.css`, `main.js` or the bundle, bump the `?v=` number on th
 
 ## 🚀 Deployment
 
-Push to `main` on GitHub → Hostinger pulls it (Websites → optiobyte.com → Advanced → Git → Deploy,
-or automatically with the webhook). Cloudflare sits in front: if something looks stale,
-purge its cache (Caching → Purge Everything).
+Hosted on **Vercel** (project `abubaten`, live at https://abubaten.vercel.app).
+Push to `main` on GitHub → Vercel builds and deploys automatically.
+
+- `vercel.json` holds the security headers (CSP, HSTS…) and caching rules.
+- `scripts/vercel-build.sh` copies only the public files into `public/`, so README, package.json,
+  the 3D source (`src/3d/`) and the full-length films in `src/assets/Projects/` are not served.
+- Every pull request / branch gets its own preview URL before it goes live.
 
 Rollback: `git revert HEAD && git push origin main`.
 

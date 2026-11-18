@@ -7,16 +7,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://optiobyte.com/</loc>
+    <loc>https://abubaten.vercel.app/</loc>
     <lastmod>2026-11-01</lastmod>
     <image:image>
-      <image:loc>https://optiobyte.com/src/assets/baten/baten-standing.jpg</image:loc>
+      <image:loc>https://abubaten.vercel.app/src/assets/baten/baten-standing.jpg</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://optiobyte.com/src/assets/baten/baten-laptop-1024.webp</image:loc>
+      <image:loc>https://abubaten.vercel.app/src/assets/baten/baten-laptop-1024.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://optiobyte.com/src/assets/baten/baten-workspace-1024.webp</image:loc>
+      <image:loc>https://abubaten.vercel.app/src/assets/baten/baten-workspace-1024.webp</image:loc>
     </image:image>
   </url>
 </urlset>

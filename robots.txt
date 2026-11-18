@@ -1,4 +1,4 @@
-# robots.txt for https://optiobyte.com/
+# robots.txt for https://abubaten.vercel.app/
 User-agent: *
 Allow: /
 
@@ -7,4 +7,4 @@ Disallow: /api/
 Disallow: /*?*preview=*
 Disallow: /*?*draft=*
 
-Sitemap: https://optiobyte.com/sitemap.xml
+Sitemap: https://abubaten.vercel.app/sitemap.xml
